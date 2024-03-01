@@ -189,7 +189,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
             Container(
               // decoration: BoxDecoration(image: AssetImage('lib\assets\images\adminwall.jpg')),
               child: Image.asset(
-                'lib/assets/images/adminwall.jpg',
+                'lib/assets/images/splashscreen.jpg',
                 fit: BoxFit.cover,
               ),
               //  color: Colors.blue,

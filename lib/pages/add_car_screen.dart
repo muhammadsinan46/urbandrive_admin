@@ -1,43 +1,46 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ud_admin/application/addcar/bloc/addcarmenu_bloc.dart';
 
-class AddCarDropMenu extends StatefulWidget {
+
+class AddCarDropMenu extends StatelessWidget {
   AddCarDropMenu(
       {super.key,
       required this.brandList,
       required this.hintTexted,
-      required this.brandValue});
+      required this.brandValue,
+      required this.selectedvalue
+      });
 
   List<String> brandList = [];
   String? hintTexted;
   String? brandValue;
 
-  @override
-  State<AddCarDropMenu> createState() => _AddCarDropMenuState();
-}
 
-class _AddCarDropMenuState extends State<AddCarDropMenu> {
+
+  String? selectedvalue;
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddcarmenuBloc, AddcarmenuState>(
-      builder: (context, state) {
-        return DropdownButtonFormField(
-            decoration: InputDecoration(
-                border:const  OutlineInputBorder(),
-              hintText:widget. hintTexted,
-            ),
-            items: widget.brandList.map((String value) {
-              return DropdownMenuItem(value: value, child: Text(value));
-            }).toList(),
-            onChanged: (String? value) {
-
-              BlocProvider.of<AddcarmenuBloc>(context).add(AddCarChangedEvent(dropchangedvalue:value! ));
-             
-            });
+    return DropdownButtonFormField(
+      value: selectedvalue,
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(),
+        hintText: hintTexted,
+      ),
+      items: brandList.map((String value) {
+        return DropdownMenuItem(value: value, child: Text(value));
+      }).toList(),
+      onChanged: (String? value) {
+        selectedvalue = value;
+    print(selectedvalue);
+        //BlocProvider.of<AddcarmenuBloc>(context).add(AddCarChangedEvent(dropchangedvalue:value! ));
       },
+      // onSaved: (newValue) {
+      //   print(newValue);
+      //   selectedvalue = newValue;
+      //   print(selectedvalue);
+      // },
     );
   }
 }
