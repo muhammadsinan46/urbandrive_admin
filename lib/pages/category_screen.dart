@@ -1,12 +1,14 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:ud_admin/application/categoryScreen/category_image_bloc/category_bloc.dart';
 import 'package:ud_admin/application/categoryScreen/category_list_bloc/categorylist_bloc.dart';
@@ -14,8 +16,6 @@ import 'package:ud_admin/domain/car_model_repo.dart';
 
 import 'package:ud_admin/domain/category_model.dart';
 import 'package:ud_admin/domain/category_repo.dart';
-
-
 
 class CategoryScreen extends StatelessWidget {
   CategoryScreen({super.key});
@@ -25,7 +25,7 @@ class CategoryScreen extends StatelessWidget {
 
   List<CategoryModel> categoryList = [];
 
-  CarModelRepo carmodel =CarModelRepo();
+  CarModelRepo carmodel = CarModelRepo();
   CategoryRepo cater = CategoryRepo();
   Uint8List? categoryImage;
 
@@ -37,7 +37,7 @@ class CategoryScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
-            border: Border.all(),
+           // border: Border.all(),
           ),
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -56,9 +56,8 @@ class CategoryScreen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-
                         carmodel.uploadBrandList();
-                      //  cater.getCategoryData();
+                        //  cater.getCategoryData();
                         showDialog(
                             context: context,
                             builder: (context) {
@@ -97,8 +96,8 @@ class CategoryScreen extends StatelessWidget {
                                                     categorynameController.text)
                                                 .set(datas)
                                                 .then((value) {
-                                              categorynameController.text = "";
-                                              descriptionController.text = "";
+                                              categorynameController.clear();
+                                              descriptionController.clear();
                                               context
                                                   .read<CategorylistBloc>()
                                                   .add(CateListLoadedEvent());
@@ -183,11 +182,10 @@ class CategoryScreen extends StatelessWidget {
                                                   height: 100,
                                                   width: 150,
                                                   child: Center(
-                                                        child: Image.memory(
-                                                      state.cateImage,
-                                                      fit: BoxFit.cover,
-                                                    )
-                                                  ),
+                                                      child: Image.memory(
+                                                    state.cateImage,
+                                                    fit: BoxFit.cover,
+                                                  )),
                                                 ),
                                               );
                                             }
@@ -266,59 +264,116 @@ class CategoryScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+
+                SizedBox(height: 20,),
                 //row
 
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(),
+                    // border: Border.all(),
                   ),
                   height: MediaQuery.sizeOf(context).height - 100,
-                  width: MediaQuery.sizeOf(context).width - 500,
+                  width: MediaQuery.sizeOf(context).width - 200,
                   child: BlocBuilder<CategorylistBloc, CategorylistState>(
                     builder: (context, state) {
                       print(state.runtimeType);
                       if (state is CategorylistInitial) {
                         //    return ListView.builder(itemBuilder: (context, index) {
-                        return DataTable(
-                            columns: [
-                              DataColumn(label: Text("No.")),
-                              DataColumn(label: Text("Image")),
-                              DataColumn(label: Text("Category Name")),
-                              DataColumn(label: Text("Description")),
-                            ],
-                            rows: List.generate(0, (index) {
-                              return DataRow(cells: []);
-                            }));
+                        return  GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 4,
+                              //    childAspectRatio: 1.2,
+                                  crossAxisSpacing: 8.0,
+                                  mainAxisSpacing: 30.0),
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              child: Center(child: CircularProgressIndicator(),)
+                            );
+                          },
+                        );
 
                         //     },);
                       } else if (state is CategoryUpdatedState) {
                         categoryList = state.categoryList;
-                        return DataTable(
-                            columns: [
-                              DataColumn(label: Text("No.")),
-                              DataColumn(label: Text("Image")),
-                              DataColumn(label: Text("Category Name")),
-                              DataColumn(label: Text("Description")),
-                              DataColumn(label: Text("Edit")),
-                              DataColumn(label: Text("Delete")),
-                            ],
-                            rows: List.generate(categoryList.length, (index) {
-                              return DataRow(cells: [
-                                DataCell(Text("${index+1}")),
-                                      
-                                      DataCell(Image.network(categoryList[index].image,)),
+                        return GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 4,
+                              //    childAspectRatio: 1.2,
+                                  crossAxisSpacing: 8.0,
+                                  mainAxisSpacing: 30.0),
+                          itemCount: categoryList.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
                                     
-                                DataCell(
-                                    Text(categoryList[index].name)),
-                                DataCell(Text(
-                                    categoryList[index].description)),
-                                           DataCell(
-                                   Icon(Icons.edit)),
-                                           DataCell(
-                                    Icon(Icons.delete)
-                                    ),
-                              ]);
-                            }));
+                                    width: MediaQuery.sizeOf(context).width*2,
+                                    height: 180,
+                                    decoration: BoxDecoration(
+                                      // border: Border.all(),
+                                        image: DecorationImage(fit: BoxFit.cover,
+                                            image: NetworkImage(
+                                      categoryList[index].image,
+                                    ))),
+                                  ),
+                                 Text(categoryList[index].name, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                                 Text(categoryList[index].description),
+                                 
+                                 SizedBox(height: 20,),
+                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                  Container(
+                                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),   color:Colors.blue[400] ,),
+                                  
+                                  
+                                    height: 40,
+                                    width: 100,
+                                    child: Center(child: FaIcon(FontAwesomeIcons.penToSquare, color: Colors.white,size: 18,)),),
+                                    SizedBox(width: 20,),
+                                  Container(
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),   color:Colors.red[400] ,),
+                                  
+                                    height: 40,
+                                    width: 100,
+                                    child: Center(child: FaIcon(FontAwesomeIcons.trashCan, color: Colors.white,size: 18,)),),
+                                 ],)
+                                 
+                                ],
+                              ),
+                            );
+                          },
+                        );
+
+                        // DataTable(
+                        //     columns: [
+                        //       DataColumn(label: Text("No.")),
+                        //       DataColumn(label: Text("Image")),
+                        //       DataColumn(label: Text("Category Name")),
+                        //       DataColumn(label: Text("Description")),
+                        //       DataColumn(label: Text("Edit")),
+                        //       DataColumn(label: Text("Delete")),
+                        //     ],
+                        //     rows: List.generate(categoryList.length, (index) {
+                        //       return DataRow(cells: [
+                        //         DataCell(Text("${index + 1}")),
+                        //         DataCell(Image.network(
+                        //           categoryList[index].image,
+                        //         )),
+                        //         DataCell(Text(categoryList[index].name)),
+                        //         DataCell(Text(categoryList[index].description)),
+                        //         DataCell(Icon(Icons.edit)),
+                        //         DataCell(Icon(Icons.delete)),
+                        //       ]);
+                        //     })
+                        //     );
                       } else {
                         return Container();
                       }

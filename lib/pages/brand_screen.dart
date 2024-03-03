@@ -1,12 +1,14 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ud_admin/application/brandScreen/brand_list_bloc/brand_list_bloc.dart';
 import 'package:ud_admin/application/brandScreen/brand_logo/brand_logo_bloc.dart';
 import 'package:ud_admin/domain/brand_model.dart';
@@ -234,7 +236,7 @@ class AddBrandScreen extends StatelessWidget {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(),
+                  //  border: Border.all(),
                   ),
                   height: MediaQuery.sizeOf(context).height - 200,
                   width: MediaQuery.sizeOf(context).width - 500,
@@ -243,43 +245,127 @@ class AddBrandScreen extends StatelessWidget {
                       print(state.runtimeType);
                       if (state is BrandListInitial) {
                         //    return ListView.builder(itemBuilder: (context, index) {
-                        return DataTable(
-                            columns: [
-                              DataColumn(label: Text("No.")),
-                              DataColumn(label: Text("Logo")),
-                              DataColumn(label: Text("Brand Name")),
-                              DataColumn(label: Text("Description")),
-                              DataColumn(label: Text("Edit")),
-                              DataColumn(label: Text("Delete")),
-                            ],
-                            rows: List.generate(0, (index) {
-                              return DataRow(cells: []);
-                            }));
+                        return  GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 5,
+                         
+                                  crossAxisSpacing: 8.0,
+                                  mainAxisSpacing: 30.0),
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return
+                             Card(
+                               clipBehavior: Clip.antiAliasWithSaveLayer,
+                               child:Center(child: CircularProgressIndicator(),)
+                             );
+                          },
+                        )
+                        ;
+                       
 
                         //     },);
                       } else if (state is BrandLoadedList) {
                         brandList = state.brandList;
-                        return DataTable(
-                            columns: [
-                              DataColumn(label: Text("No.")),
-                              DataColumn(label: Text("Logo")),
-                              DataColumn(label: Text("Brand Name")),
-                              DataColumn(label: Text("Description")),
-                              DataColumn(label: Text("Edit")),
-                              DataColumn(label: Text("Delete")),
-                            ],
-                            rows: List.generate(brandList.length, (index) {
-                              return DataRow(cells: [
-                                DataCell(Text("${index + 1}")),
-                                DataCell(Image.network(
-                                  brandList[index].logo,
-                                )),
-                                DataCell(Text(brandList[index].name)),
-                                DataCell(Text(brandList[index].description)),
-                                DataCell(Icon(Icons.edit)),
-                                DataCell(Icon(Icons.delete)),
-                              ]);
-                            }));
+                        return 
+
+                        GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 5,
+                         
+                                  crossAxisSpacing: 8.0,
+                                  mainAxisSpacing: 30.0),
+                          itemCount: brandList.length,
+                          itemBuilder: (context, index) {
+                            return
+                             GestureDetector(
+                      onTap: () => showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        actions: [Center(child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Container(
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),  color: Colors.black,),
+                                            height: 50,width: 140,child: Center(child: Text("OK", style: TextStyle(fontSize: 18, color: Colors.white),)),),
+                                        ))],
+                                            content: Container(
+                                              height: MediaQuery.sizeOf(context)
+                                                      .height -
+                                                  400,
+                                              width: MediaQuery.sizeOf(context)
+                                                      .width -
+                                                  1200,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  CircleAvatar(
+                                                    radius: 80,
+                                                    child:  Image.network( brandList[index].logo),
+                                                  ),
+                                                  Text(
+                                                    brandList[index].name,
+                                                    style:
+                                                        TextStyle(fontSize: 22),
+                                                  ),
+                                                  Text(brandList[index].description),
+                                                  Text("Number of Cars: 12"),
+                                               
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                          ),
+                              child: Card(
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      
+                                      width: MediaQuery.sizeOf(context).width*2,
+                                      height: 120,
+                                      decoration: BoxDecoration(
+                                        // border: Border.all(),
+                                          image: DecorationImage(fit: BoxFit.cover,
+                                              image: NetworkImage(
+                                        brandList[index].logo,
+                                      ))),
+                                    ),
+                                   Text(brandList[index].name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                                 //  Text(brandList[index].description),
+                                   
+                                  SizedBox(height: 6,),
+                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                    Container(
+                                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),   color:Colors.black ,),
+                                    
+                                    
+                                      height: 30,
+                                      width: 80,
+                                      child: Center(child: FaIcon(FontAwesomeIcons.penToSquare, color: Colors.white,size: 12,)),),
+                                      SizedBox(width: 20,),
+                                    Container(
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),   color:Colors.white ,border: Border.all()),
+                                    
+                                      height: 30,
+                                      width: 80,
+                                      child: Center(child: FaIcon(FontAwesomeIcons.trashCan, color: Colors.black,size: 12,)),),
+                                   ],)
+                                   
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                       
                       } else {
                         return Container();
                       }

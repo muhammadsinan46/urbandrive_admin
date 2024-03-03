@@ -42,7 +42,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
 
   List<Widget> pages = [
     const DashboradScreen(),
-    const CustomerScreen(),
+     CustomerScreen(),
      BookingScreen(),
     const InboxScreen(),
      CategoryScreen(),
@@ -53,7 +53,6 @@ class _MainPageScreenState extends State<MainPageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
 
     return BlocBuilder<SlidebarBloc, SlidebarState>(
       builder: (context, state) {
@@ -102,7 +101,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
                 showTitle: true,
                 avatarBackgroundColor: Colors.red,
                 title: "Data",
-                isCollapsed: false,
+              //  isCollapsed: false,
                 //  bottomPadding: 35,
 
                 //  avatarImg: "gauygivdvbf",
@@ -132,28 +131,28 @@ class _MainPageScreenState extends State<MainPageScreen> {
                       }),
                   CollapsibleItem(
                       text: "Inbox",
-                      icon: FontAwesomeIcons.inbox,
+                      icon: FontAwesomeIcons.envelope ,
                       onPressed: () {
                         BlocProvider.of<SlidebarBloc>(context)
                             .add(SlidebarChangeEvent(index: index +3));
                       }),
                          CollapsibleItem(
                       text: "Category",
-                      icon: FontAwesomeIcons.inbox,
+                      icon: Icons.category,
                       onPressed: () {
                         BlocProvider.of<SlidebarBloc>(context)
                             .add(SlidebarChangeEvent(index: index + 4));
                       }),
                         CollapsibleItem(
-                      text: "Brand",
-                      icon: FontAwesomeIcons.inbox,
+                      text: "Brands",
+                      icon: FontAwesomeIcons.rankingStar,
                       onPressed: () {
                         BlocProvider.of<SlidebarBloc>(context)
                             .add(SlidebarChangeEvent(index: index + 5));
                       }),
                            CollapsibleItem(
-                      text: "Model",
-                      icon: FontAwesomeIcons.carSide,
+                      text: "Models",
+                      icon: FontAwesomeIcons.taxi,
                       onPressed: () {
                         BlocProvider.of<SlidebarBloc>(context)
                             .add(SlidebarChangeEvent(index: index + 6));
@@ -183,147 +182,3 @@ class _MainPageScreenState extends State<MainPageScreen> {
     );
   }
 }
-
-
-// class MainPageScreen extends StatefulWidget {
-//   MainPageScreen({Key? key});
-
-//   @override
-//   State<MainPageScreen> createState() => _MainPageScreenState();
-// }
-
-// class _MainPageScreenState extends State<MainPageScreen> {
-//   late SharedPreferences pref;
-//   String? username;
-
-//   // Initialize SharedPreferences and retrieve username
-//   initial() async {
-//     pref = await SharedPreferences.getInstance();
-//     setState(() {
-//       username = pref.getString("email");
-//     });
-//   }
-
-//   @override
-//   void initState() {
-//     initial();
-//     super.initState();
-//   }
-
-//   int index = 0;
-
-//   List<Widget> pages = [
-//     const DashboradScreen(),
-//     const CustomerScreen(),
-//     CarsScreen(),
-//     const BookingScreen(),
-//     const InboxScreen()
-//   ];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     var screenSize = MediaQuery.of(context).size;
-
-//     return BlocBuilder<SlidebarBloc, SlidebarState>(
-//       builder: (context, state) {
-//         if (state is SlidebarSuccessState) {
-//           return Scaffold(
-//             appBar: PreferredSize(
-//               preferredSize: Size(450, 50),
-//               child: AppBar(
-//                 backgroundColor: Color.fromARGB(255, 219, 231, 249),
-//                 title: Text(
-//                   "data",
-//                   style: TextStyle(color: Colors.white),
-//                 ),
-//                 actions: [
-//                   // Check if username is not null before displaying
-//                   if (username != null) Text(username!),
-//                   IconButton(
-//                     onPressed: () {
-//                       // Handle user logout
-//                       pref.setBool("login", true);
-//                       Navigator.pushReplacement(
-//                         context,
-//                         MaterialPageRoute(
-//                           builder: (context) => AdminLoginScreen(),
-//                         ),
-//                       );
-//                     },
-//                     icon: Icon(Icons.person),
-//                   )
-//                 ],
-//               ),
-//             ),
-//             body:  CollapsibleSidebar(
-//                 iconSize: 20,
-//                 backgroundColor:Color.fromARGB(255, 219, 231, 249),
-//                 selectedTextColor: Color.fromARGB(255, 0, 0, 0),
-//                 unselectedTextColor: Colors.grey,
-//                 textStyle:
-//                     const TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
-//                 titleStyle: const TextStyle(
-//                     fontSize: 20,
-//                     fontStyle: FontStyle.italic,
-//                     fontWeight: FontWeight.bold),
-//                 toggleTitleStyle:
-//                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//                 sidebarBoxShadow: const [],
-//                 collapseOnBodyTap: false,
-//                 itemPadding: 10,
-//                 selectedIconBox: const Color.fromARGB(255, 255, 255, 255),
-//                 selectedIconColor: Colors.pink,
-//                 showTitle: true,
-//                 avatarBackgroundColor: Colors.red,
-//                 title: "Data",
-//                 isCollapsed: false,
-//                 //  bottomPadding: 35,
-
-//                 //  avatarImg: "gauygivdvbf",
-
-//                 items: [
-//                   CollapsibleItem(
-//                       isSelected: true,
-//                       text: "Dashboard",
-//                       icon: Icons.dashboard,
-//                       onPressed: () {
-//                         BlocProvider.of<SlidebarBloc>(context)
-//                             .add(SlidebarChangeEvent(index: index));
-//                       }),
-//                   CollapsibleItem(
-//                       text: "Customers",
-//                       icon: Icons.groups,
-//                       onPressed: () {
-//                         BlocProvider.of<SlidebarBloc>(context)
-//                             .add(SlidebarChangeEvent(index: index + 1));
-//                       }),
-//                   CollapsibleItem(
-//                       text: "Cars",
-//                       icon: FontAwesomeIcons.carSide,
-//                       onPressed: () {
-//                         BlocProvider.of<SlidebarBloc>(context)
-//                             .add(SlidebarChangeEvent(index: index + 2));
-//                       }),
-//                   CollapsibleItem(
-//                       text: "Bookings",
-//                       icon: FontAwesomeIcons.calendarWeek,
-//                       onPressed: () {
-//                         BlocProvider.of<SlidebarBloc>(context)
-//                             .add(SlidebarChangeEvent(index: index + 3));
-//                       }),
-//                   CollapsibleItem(
-//                       text: "Inbox",
-//                       icon: FontAwesomeIcons.inbox,
-//                       onPressed: () {
-//                         BlocProvider.of<SlidebarBloc>(context)
-//                             .add(SlidebarChangeEvent(index: index + 4));
-//                       }),
-//                 ],
-//                 body: pages[state.index]),
-//           );
-//         }
-//         return pages[0]; // Return a default page if state is not SlidebarSuccessState
-//       },
-//     );
-//   }
-// }

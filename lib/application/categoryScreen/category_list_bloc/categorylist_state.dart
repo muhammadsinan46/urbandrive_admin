@@ -9,7 +9,7 @@ sealed class CategorylistState extends Equatable {
 
 final class CategorylistInitial extends CategorylistState{}
 final class CategoryUpdatedState extends CategorylistState{
-  List<CategoryModel> categoryList;
+  final List<CategoryModel> categoryList;
 
   CategoryUpdatedState({required this.categoryList});
 

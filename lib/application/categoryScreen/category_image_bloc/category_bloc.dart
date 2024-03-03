@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:image_picker_web/image_picker_web.dart';
-import 'package:ud_admin/domain/category_model.dart';
+
 import 'package:ud_admin/domain/category_repo.dart';
 
 part 'category_event.dart';

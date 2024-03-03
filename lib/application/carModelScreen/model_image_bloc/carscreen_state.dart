@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 part of 'carscreen_bloc.dart';
 
  class CarscreenState extends Equatable {
@@ -19,14 +21,6 @@ class UploadImageState extends CarscreenState{
   List<Object> get props =>[imageFile];
 }
 
-class UploadDataState extends CarscreenState{
-  List<String> categoryList;
-  List<String> brandnameList;
-  UploadDataState({required this.categoryList, required this.brandnameList});
 
-  List<Object> get props =>[categoryList, brandnameList];
-
-
-}
 
 

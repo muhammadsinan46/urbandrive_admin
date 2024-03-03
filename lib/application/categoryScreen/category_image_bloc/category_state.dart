@@ -11,8 +11,8 @@ part of 'category_bloc.dart';
 
 final class CategoryInitial extends CategoryState {}
 final class UploadCateImageState extends CategoryState{
-  Uint8List cateImage;
-  UploadCateImageState({required this.cateImage});
+  final Uint8List cateImage ;
+  const UploadCateImageState({required this.cateImage});
 
   @override
   List<Object> get props =>[cateImage]; 

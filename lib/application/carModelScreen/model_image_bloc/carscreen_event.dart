@@ -8,4 +8,5 @@ part of 'carscreen_bloc.dart';
 }
 class CarsreenloadingEvent extends CarscreenEvent{}
 class UploadImageEvent extends CarscreenEvent{}
-class UploadDataEvent extends CarscreenEvent{}
+class ModelImageUpdatedEvent extends CarscreenEvent{}
+

@@ -16,6 +16,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   var passwordController = TextEditingController();
   late SharedPreferences pref;
   bool? isUser;
+  bool isHidden =true;
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -27,13 +28,17 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   isLoggedIn() async {
     pref = await SharedPreferences.getInstance();
 
-
     isUser = pref.getBool("login") ?? true;
     if (isUser == false) {
-   
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => MainPageScreen()));
     }
+  }
+
+  togglePassword(){
+    setState(() {
+        isHidden =!isHidden;
+    });
   }
 
   @override
@@ -106,6 +111,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                     Card(
                       elevation: 5,
                       child: TextFormField(
+                        obscureText: isHidden,
                         cursorColor: Colors.black,
                         validator: (value) =>
                             FormValidator().validatePassword(value),
@@ -128,19 +134,25 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             hintStyle: const TextStyle(
                               color: Color.fromARGB(255, 191, 191, 191),
                             ),
+                            suffixIcon:GestureDetector(
+                            onTap:togglePassword ,
+                            child: Icon(isHidden?  Icons.visibility_off:Icons.visibility)) ,
                             hintText: "Password"),
+                            
                       ),
                     ),
                     Container(
-                        margin: EdgeInsets.only(left: 280),
+                        alignment: Alignment.topRight,
+                        //  margin: EdgeInsets.only(left: 280),
                         child: TextButton(
                             onPressed: () {
                               //  userauth.forgotPassword(emailController.text);
                             },
                             child: const Text(
                               "Forgot Password?",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 79, 79, 79),
+                                  fontSize: 15),
                             ))),
                     GestureDetector(
                       onTap: () {
@@ -151,34 +163,30 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             password == "123456") {
                           pref.setBool("login", false);
                           pref.setString("email", email);
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MainPageScreen()), (route) => false);
-
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MainPageScreen()),
+                              (route) => false);
                         }
-
- 
                       },
-                      child: Container(
-                        margin: EdgeInsets.only(top: 20, bottom: 20),
-                        decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(10)),
-                        height: 45,
-                        width: 120,
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
+                      child: Card(
+                        child: Container(
+                          //  margin: EdgeInsets.only(top: 20, bottom: 20),
+                          decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(10)),
+                          height: 60,
+                          width: 300,
+                          child: Center(
+                            child: Text(
                               "Login",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 18),
                             ),
-                            Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                            )
-                          ],
+                          ),
                         ),
                       ),
                     ),

@@ -4,16 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ud_admin/application/brandScreen/brand_list_bloc/brand_list_bloc.dart';
 import 'package:ud_admin/application/brandScreen/brand_logo/brand_logo_bloc.dart';
+import 'package:ud_admin/application/carModelScreen/car_model_list_bloc/car_model_list_bloc.dart';
+import 'package:ud_admin/application/carModelScreen/update_details_bloc/update_details_bloc.dart';
 import 'package:ud_admin/application/carModelScreen/model_image_bloc/carscreen_bloc.dart';
+
 
 import 'package:ud_admin/application/categoryScreen/category_image_bloc/category_bloc.dart';
 import 'package:ud_admin/application/categoryScreen/category_list_bloc/categorylist_bloc.dart';
+import 'package:ud_admin/application/customersScreen/bloc/customers_list_bloc.dart';
 
 
 import 'package:ud_admin/application/slidebar/bloc/slidebar_bloc.dart';
 import 'package:ud_admin/domain/brand_repo.dart';
 import 'package:ud_admin/domain/car_model_repo.dart';
+import 'package:ud_admin/domain/cardata_model_repo.dart';
 import 'package:ud_admin/domain/category_repo.dart';
+import 'package:ud_admin/domain/customer_repo.dart';
 import 'package:ud_admin/pages/admin_login.dart';
 
 void main() async {
@@ -47,7 +53,8 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(
           create: (context) => SlidebarBloc(),
         ),
-        BlocProvider(create: (context) => CarscreenBloc(CarModelRepo()),),
+        BlocProvider(create: (context) => CarscreenBloc(),),
+        BlocProvider(create: (context) => UpdateDetailsBloc(CarModelRepo()),),
        
         BlocProvider(create: (context)=>CategoryBloc()),
           BlocProvider(
@@ -55,7 +62,10 @@ class _MyAppState extends State<MyApp> {
         ),
 
         BlocProvider(create: (context) => BrandLogoBloc(),),
-        BlocProvider(create: (context) => BrandListBloc(BrandRepo()),)
+        BlocProvider(create: (context) => BrandListBloc(BrandRepo()),),
+
+        BlocProvider(create: (context) => CarModelListBloc(CarDataModelRepo()),),
+        BlocProvider(create: (context) => CustomersListBloc(CustomersRepo()),)
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false, home: AdminLoginScreen()),

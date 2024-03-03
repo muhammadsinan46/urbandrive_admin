@@ -1,18 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:ud_admin/domain/car_model.dart';
+
 
 class CarModelRepo{
 
-  List<CarModel> carModel =[];
+
   final categoryCollection = FirebaseFirestore.instance.collection('category');
   final brandCollection = FirebaseFirestore.instance.collection('brands');
 
-// Future<List<CarModel>> getModelData()async{
-
-
-
-// }
 
 Future<List<String>> uploadCategoryList()async{
 
@@ -59,5 +54,7 @@ Future<List<String>> uploadBrandList()async{
 
 
 }
+
+
 
 }
