@@ -2,7 +2,7 @@ class CustomersModel {
   String id;
   String name;
   String? profile;
-  String mobile;
+  //String mobile;
   String email;
 
   CustomersModel(
@@ -10,5 +10,6 @@ class CustomersModel {
       required this.name,
     //  this.profile,
       required this.email,
-      required this.mobile});
+    // required this.mobile
+      });
 }

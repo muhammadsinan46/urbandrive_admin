@@ -10,7 +10,7 @@ part 'brand_list_state.dart';
 
 class BrandListBloc extends Bloc<BrandListEvent, BrandListState> {
   BrandRepo brandRepo = BrandRepo();
-  BrandListBloc(this.brandRepo) : super(BrandListInitial()) {
+  BrandListBloc(this.brandRepo) : super(BrandListState()) {
     on<BrandListLoadingEvent>(brandlistLaoding);
     on<BrandListLoadedEvent>(brandListLoaded);
   }
@@ -22,11 +22,14 @@ class BrandListBloc extends Bloc<BrandListEvent, BrandListState> {
 
   FutureOr<void> brandListLoaded(
       BrandListLoadedEvent event, Emitter<BrandListState> emit) async {
+
+       emit(BrandListInitial());
     try {
+      print("brand is loading..................");
       final brands = await brandRepo.getbrandData();
       emit(BrandLoadedList(brandList: brands));
     } catch (e) {
-      print(e.toString());
+      print("error is ${e.toString()}");
     }
   }
 }

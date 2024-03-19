@@ -1,6 +1,6 @@
 part of 'brand_list_bloc.dart';
 
- class BrandListEvent extends Equatable {
+ sealed class BrandListEvent extends Equatable {
   const BrandListEvent();
 
   @override

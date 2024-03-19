@@ -3,10 +3,11 @@ import 'package:ud_admin/domain/brand_model.dart';
 
 class BrandRepo{
 
-  List<BrandModel> brandlist =[];
-
+  
 
 Future<List<BrandModel>> getbrandData()async{
+
+  List<BrandModel> brandlist =[];
 
 try{
     final brandcollection = await FirebaseFirestore.instance.collection('brands').get();
@@ -14,8 +15,10 @@ try{
   brandcollection.docs.forEach((element) { 
 
    final  data  = element.data();
-   final brand = BrandModel(name: data['name'], description: data['description'], logo: data['logo']);
-
+   final brand = BrandModel(
+    id: data['id'],
+    name: data['name'], description: data['description'], logo: data['logo']);
+   
    brandlist.add(brand);
   });
   return brandlist;

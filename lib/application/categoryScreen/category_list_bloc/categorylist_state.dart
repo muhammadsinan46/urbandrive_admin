@@ -1,13 +1,17 @@
 part of 'categorylist_bloc.dart';
 
-sealed class CategorylistState extends Equatable {
+ class CategorylistState extends Equatable {
   const CategorylistState();
   
   @override
   List<Object> get props => [];
 }
 
-final class CategorylistInitial extends CategorylistState{}
+final class CategorylistInitial extends CategorylistState{
+
+  @override
+  List<Object> get props =>[];
+}
 final class CategoryUpdatedState extends CategorylistState{
   final List<CategoryModel> categoryList;
 

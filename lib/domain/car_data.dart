@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class CarData {
 
 
@@ -9,9 +11,11 @@ class CarData {
   String? baggageValue;
   String? priceValue;
   String? seatsValue;
+  String? colorValue;
   String? depositValue;
   String? freekmsValue;
   String? extrakmsValue;
+  String? cityValue;
 
   List<String> transmitList = ["automatic", "manual"];
 
@@ -23,6 +27,18 @@ class CarData {
     'Petrol',
     'Diesel',
     'Electric',
+  ];
+
+  List<String> cityList =["Kochi","Bengaluru", "Chennai", "Delhi", "Chennai","Hydrabad"];
+  List<Map<String, Color>> colorlist =[
+    { "White":Colors.white, },
+    { "Black":Colors.black, },
+    { "Blue":Colors.blue, },
+    { "Red":Colors.red, },
+    { "Green":Colors.green, },
+    { "Grey":Colors.grey, },
+    { "Yellow":Colors.yellow, },
+  
   ];
 
   List<String> baggageList = ["2", "4", "no space"];

@@ -16,6 +16,7 @@ class CategoryRepo {
         final data = element.data();
        
         final category = CategoryModel(
+          id: data['id'],
             name: data['name'],
             description: data['description'],
             image: data['image']);

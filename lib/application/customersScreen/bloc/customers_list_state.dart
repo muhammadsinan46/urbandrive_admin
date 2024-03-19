@@ -1,13 +1,16 @@
 part of 'customers_list_bloc.dart';
 
-sealed class CustomersListState extends Equatable {
+ class CustomersListState extends Equatable {
   const CustomersListState();
   
   @override
   List<Object> get props => [];
 }
 
-final class CustomersListLoading extends CustomersListState {}
+final class CustomersListLoading extends CustomersListState {
+    @override
+  List<Object> get props => [];
+}
 final class CustomersListLoaded extends CustomersListState {
 
   final List<CustomersModel> customersList;

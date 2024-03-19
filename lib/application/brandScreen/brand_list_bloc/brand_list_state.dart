@@ -7,11 +7,14 @@ part of 'brand_list_bloc.dart';
   List<Object> get props => [];
 }
 
-final class BrandListInitial extends BrandListState {}
+final class BrandListInitial extends BrandListState {
+    @override
+  List<Object> get props =>[];
+}
 final class BrandLoadedList extends BrandListState{
  final  List<BrandModel> brandList;
 
- const  BrandLoadedList({required this.brandList});
+   BrandLoadedList({required this.brandList});
 
   @override
   List<Object> get props =>[brandList];

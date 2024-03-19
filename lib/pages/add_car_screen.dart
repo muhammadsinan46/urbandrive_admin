@@ -2,45 +2,43 @@
 
 import 'package:flutter/material.dart';
 
-
-class AddCarDropMenu extends StatelessWidget {
-  AddCarDropMenu(
-      {super.key,
-      required this.brandList,
-      required this.hintTexted,
-      required this.brandValue,
-      required this.selectedvalue
-      });
-
-  List<String> brandList = [];
-  String? hintTexted;
+class AddCarDropMenu extends StatefulWidget {
+  final List<String> brandList;
+  final String? hintText;
   String? brandValue;
+  String? selectedValue;
 
+  AddCarDropMenu({
+    Key? key,
+    required this.brandList,
+    required this.hintText,
+    required this.brandValue,
+    required this.selectedValue,
+  }) : super(key: key);
 
+  @override
+  _AddCarDropMenuState createState() => _AddCarDropMenuState();
+}
 
-  String? selectedvalue;
-
+class _AddCarDropMenuState extends State<AddCarDropMenu> {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField(
-      value: selectedvalue,
+      value: widget.selectedValue,
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
-        hintText: hintTexted,
+        hintText: widget.hintText,
       ),
-      items: brandList.map((String value) {
+      items: widget.brandList.map((String value) {
         return DropdownMenuItem(value: value, child: Text(value));
       }).toList(),
       onChanged: (String? value) {
-        selectedvalue = value;
-    print(selectedvalue);
-        //BlocProvider.of<AddcarmenuBloc>(context).add(AddCarChangedEvent(dropchangedvalue:value! ));
+        setState(() {
+          widget.selectedValue = value;
+          print(widget.selectedValue);
+          // BlocProvider.of<AddcarmenuBloc>(context).add(AddCarChangedEvent(dropchangedvalue: value! ));
+        });
       },
-      // onSaved: (newValue) {
-      //   print(newValue);
-      //   selectedvalue = newValue;
-      //   print(selectedvalue);
-      // },
     );
   }
 }

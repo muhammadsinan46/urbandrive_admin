@@ -11,7 +11,7 @@ part 'customers_list_state.dart';
 class CustomersListBloc extends Bloc<CustomersListEvent, CustomersListState> {
 
   final CustomersRepo customersRepo;
-  CustomersListBloc(this.customersRepo) : super(CustomersListLoading()) {
+  CustomersListBloc(this.customersRepo) : super(CustomersListState()) {
 
     on<CustomerListLoadingEvent>(customerLoading);
     on<CustomerListLoadedEvent>(listLoaded);
@@ -23,6 +23,7 @@ class CustomersListBloc extends Bloc<CustomersListEvent, CustomersListState> {
   }
 
   FutureOr<void> listLoaded(CustomerListLoadedEvent event, Emitter<CustomersListState> emit)async {
+    emit(CustomersListLoading());
 try{
 
       final customerlist = await customersRepo.getcustomersList();

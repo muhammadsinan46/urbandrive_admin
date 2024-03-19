@@ -10,7 +10,7 @@ part 'car_model_list_state.dart';
 
 class CarModelListBloc extends Bloc<CarModelListEvent, CarModelListState> {
   CarDataModelRepo cardatamodelRepo;
-  CarModelListBloc(this.cardatamodelRepo) : super(CarModelListInitial()) {
+  CarModelListBloc(this.cardatamodelRepo) : super(CarModelListState()) {
     on<CarModelListInitialEvent>(loadingList);
   on<CarModelListLoadedEvent>(loadedList);
   }
@@ -20,6 +20,8 @@ class CarModelListBloc extends Bloc<CarModelListEvent, CarModelListState> {
   }
 
   FutureOr<void> loadedList(CarModelListLoadedEvent event, Emitter<CarModelListState> emit)async {
+
+    emit(CarModelListInitial());
 
     try{
         

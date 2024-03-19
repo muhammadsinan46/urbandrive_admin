@@ -3,6 +3,7 @@ import 'package:ud_admin/domain/customers_model.dart';
 
 class CustomersRepo {
   Future<List<CustomersModel>> getcustomersList() async {
+
     List<CustomersModel> customerslist = [];
 
     try {
@@ -11,15 +12,17 @@ class CustomersRepo {
 
       collection.docs.forEach((element) {
         final data = element.data();
-
+  
+    print("cuatomer data is calling ${data['email']}");
         final customerData = CustomersModel(
             id: data['uid'],
             name: data['name'],
           //  profile: data['profile'],
             email: data['email'],
-            mobile: data['mobile'],
+           // mobile: data['mobile'],
             
             );
+            print("customer info is ${customerData.email}");
 
         customerslist.add(customerData);
       });

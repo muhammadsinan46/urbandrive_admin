@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ud_admin/application/BookingScreen/booking_datat_bloc/booking_data_bloc.dart';
 import 'package:ud_admin/application/brandScreen/brand_list_bloc/brand_list_bloc.dart';
 import 'package:ud_admin/application/brandScreen/brand_logo/brand_logo_bloc.dart';
 import 'package:ud_admin/application/carModelScreen/car_model_list_bloc/car_model_list_bloc.dart';
@@ -15,6 +16,7 @@ import 'package:ud_admin/application/customersScreen/bloc/customers_list_bloc.da
 
 
 import 'package:ud_admin/application/slidebar/bloc/slidebar_bloc.dart';
+import 'package:ud_admin/domain/booking_repo.dart';
 import 'package:ud_admin/domain/brand_repo.dart';
 import 'package:ud_admin/domain/car_model_repo.dart';
 import 'package:ud_admin/domain/cardata_model_repo.dart';
@@ -65,7 +67,8 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => BrandListBloc(BrandRepo()),),
 
         BlocProvider(create: (context) => CarModelListBloc(CarDataModelRepo()),),
-        BlocProvider(create: (context) => CustomersListBloc(CustomersRepo()),)
+        BlocProvider(create: (context) => CustomersListBloc(CustomersRepo()),),
+        BlocProvider(create: (context) => BookingDataBloc(BookingRepo()),)
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false, home: AdminLoginScreen()),

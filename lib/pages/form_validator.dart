@@ -1,6 +1,4 @@
 class FormValidator {
-
-
   String? validateEmail(String? email) {
     const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
         r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
@@ -23,7 +21,6 @@ class FormValidator {
     if (password.length < 6) {
       return 'password must be at least 6 characters long';
     }
-
 
     if (!password.contains(RegExp(r'[0-9]'))) {
       return 'password  must contain at least one number';

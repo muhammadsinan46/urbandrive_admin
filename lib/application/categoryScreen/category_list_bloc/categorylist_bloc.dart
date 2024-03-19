@@ -10,7 +10,7 @@ part 'categorylist_state.dart';
 
 class CategorylistBloc extends Bloc<CategorylistEvent, CategorylistState> {
     CategoryRepo repo = CategoryRepo();
-  CategorylistBloc(this.repo) : super(CategorylistInitial()) {
+  CategorylistBloc(this.repo) : super(CategorylistState()) {
 
     on<CateListLoadingEvent>(listLoading);
     on<CateListLoadedEvent>(listLoaded);
@@ -23,10 +23,20 @@ class CategorylistBloc extends Bloc<CategorylistEvent, CategorylistState> {
   }
 
   FutureOr<void> listLoaded(CateListLoadedEvent event, Emitter<CategorylistState> emit)async {
+    emit(CategorylistInitial());
 
-      final List<CategoryModel> categoryList =await  repo.getCategoryData();
+    try{
+
+      print("category is loading...");
+            final  categoryList =await  repo.getCategoryData();
 
       emit(CategoryUpdatedState(categoryList: categoryList));
+
+    }catch(e){
+      print("error occured ${e.toString()}");
+    }
+
+
 
   }
 }

@@ -8,4 +8,6 @@ sealed class CategorylistEvent extends Equatable {
 }
 
 class CateListLoadingEvent extends CategorylistEvent{}
-class CateListLoadedEvent extends CategorylistEvent{}
+class CateListLoadedEvent extends CategorylistEvent{
+
+}

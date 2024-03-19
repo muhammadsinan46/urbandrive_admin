@@ -4,7 +4,7 @@ import 'package:ud_admin/pages/form_validator.dart';
 import 'package:ud_admin/pages/main_page.dart';
 
 class AdminLoginScreen extends StatefulWidget {
-  AdminLoginScreen({super.key});
+  AdminLoginScreen({Key? key}) : super(key: key);
 
   @override
   State<AdminLoginScreen> createState() => _AdminLoginScreenState();
@@ -12,12 +12,10 @@ class AdminLoginScreen extends StatefulWidget {
 
 class _AdminLoginScreenState extends State<AdminLoginScreen> {
   var emailController = TextEditingController();
-
   var passwordController = TextEditingController();
   late SharedPreferences pref;
   bool? isUser;
-  bool isHidden =true;
-  final formKey = GlobalKey<FormState>();
+  bool isHidden = true;
 
   @override
   void initState() {
@@ -27,17 +25,18 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
   isLoggedIn() async {
     pref = await SharedPreferences.getInstance();
-
     isUser = pref.getBool("login") ?? true;
     if (isUser == false) {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => MainPageScreen()));
+        context,
+        MaterialPageRoute(builder: (context) => MainPageScreen()),
+      );
     }
   }
 
-  togglePassword(){
+  togglePassword() {
     setState(() {
-        isHidden =!isHidden;
+      isHidden = !isHidden;
     });
   }
 
@@ -45,25 +44,21 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        height: MediaQuery.sizeOf(context).height,
-        width: MediaQuery.sizeOf(context).width,
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
         child: Row(
           children: [
             Container(
               color: Colors.white,
-              height: MediaQuery.sizeOf(context).height,
-              width: MediaQuery.sizeOf(context).width * 2 / 3,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width * 2 / 3,
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Color.fromARGB(77, 126, 152, 233),
                 ),
-                padding: EdgeInsets.only(
-                  left: 50,
-                  right: 50,
-                ),
-                margin: EdgeInsets.only(
-                    left: 200, right: 200, top: 100, bottom: 100),
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                margin: EdgeInsets.symmetric(horizontal: 200, vertical: 100),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -72,7 +67,9 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                       child: Text(
                         "Sign In",
                         style: TextStyle(
-                            fontSize: 50, fontWeight: FontWeight.bold),
+                          fontSize: 50,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     Card(
@@ -84,30 +81,28 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             FormValidator().validateEmail(value),
                         controller: emailController,
                         decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            prefixIconColor:
-                                const Color.fromARGB(255, 191, 191, 191),
-                            prefixIcon: const Padding(
-                              padding: EdgeInsets.only(left: 18.0, right: 18),
-                              child: Icon(Icons.mail),
+                          filled: true,
+                          fillColor: Colors.white,
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.only(left: 18.0, right: 18),
+                            child: Icon(Icons.mail),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color.fromARGB(255, 79, 107, 158),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.white),
-                              // borderRadius: BorderRadius.circular(30)
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  color: Color.fromARGB(255, 79, 107, 158)),
-                              //  borderRadius: BorderRadius.circular(30)
-                            ),
-                            hintStyle: const TextStyle(
-                              color: Color.fromARGB(255, 191, 191, 191),
-                            ),
-                            hintText: "Email"),
+                          ),
+                          hintStyle: TextStyle(
+                            color: Color.fromARGB(255, 191, 191, 191),
+                          ),
+                          hintText: "Email",
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 25),
+                    SizedBox(height: 25),
                     Card(
                       elevation: 5,
                       child: TextFormField(
@@ -117,43 +112,43 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             FormValidator().validatePassword(value),
                         controller: passwordController,
                         decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            prefixIconColor:
-                                const Color.fromARGB(255, 191, 191, 191),
-                            prefixIcon: const Icon(Icons.lock),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.white),
-                              // borderRadius: BorderRadius.circular(30)
+                          filled: true,
+                          fillColor: Colors.white,
+                          prefixIcon: Icon(Icons.lock),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color.fromARGB(255, 79, 107, 158),
                             ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  color: Color.fromARGB(255, 79, 107, 158)),
-                              // borderRadius: BorderRadius.circular(30)
-                            ),
-                            hintStyle: const TextStyle(
-                              color: Color.fromARGB(255, 191, 191, 191),
-                            ),
-                            suffixIcon:GestureDetector(
-                            onTap:togglePassword ,
-                            child: Icon(isHidden?  Icons.visibility_off:Icons.visibility)) ,
-                            hintText: "Password"),
-                            
+                          ),
+                          hintStyle: TextStyle(
+                            color: Color.fromARGB(255, 191, 191, 191),
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: togglePassword,
+                            child: Icon(isHidden
+                                ? Icons.visibility_off
+                                : Icons.visibility),
+                          ),
+                          hintText: "Password",
+                        ),
                       ),
                     ),
                     Container(
-                        alignment: Alignment.topRight,
-                        //  margin: EdgeInsets.only(left: 280),
-                        child: TextButton(
-                            onPressed: () {
-                              //  userauth.forgotPassword(emailController.text);
-                            },
-                            child: const Text(
-                              "Forgot Password?",
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 79, 79, 79),
-                                  fontSize: 15),
-                            ))),
+                      alignment: Alignment.topRight,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "Forgot Password?",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 79, 79, 79),
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    ),
                     GestureDetector(
                       onTap: () {
                         String email = emailController.text;
@@ -164,27 +159,30 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                           pref.setBool("login", false);
                           pref.setString("email", email);
                           Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MainPageScreen()),
-                              (route) => false);
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MainPageScreen(),
+                            ),
+                            (route) => false,
+                          );
                         }
                       },
                       child: Card(
                         child: Container(
-                          //  margin: EdgeInsets.only(top: 20, bottom: 20),
                           decoration: BoxDecoration(
-                              color: Colors.green,
-                              borderRadius: BorderRadius.circular(10)),
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           height: 60,
                           width: 300,
                           child: Center(
                             child: Text(
                               "Login",
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 18),
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18,
+                              ),
                             ),
                           ),
                         ),
@@ -195,14 +193,12 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
               ),
             ),
             Container(
-              // decoration: BoxDecoration(image: AssetImage('lib\assets\images\adminwall.jpg')),
               child: Image.asset(
                 'lib/assets/images/splashscreen.jpg',
                 fit: BoxFit.cover,
               ),
-              //  color: Colors.blue,
-              height: MediaQuery.sizeOf(context).height,
-              width: MediaQuery.sizeOf(context).width * 1 / 3,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width * 1 / 3,
             )
           ],
         ),

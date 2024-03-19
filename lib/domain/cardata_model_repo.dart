@@ -5,11 +5,11 @@ import 'package:ud_admin/domain/cardata_model.dart';
 class CarDataModelRepo{
 
 
-      final List<CarDataModel> carmodelslist = [];
 
 
       Future<List<CarDataModel>>getCarDataModels()async{
 
+      final List<CarDataModel> carmodelslist = [];
     try {
       final carDataModelCollection =
           await FirebaseFirestore.instance.collection('models').get();
@@ -30,10 +30,14 @@ class CarDataModelRepo{
             deposit: data['deposit'],
             freekms: data['freekms'],
             extrakms: data['extrakms'],
-            images: data['carImages']);
+            images: data['carImages'],
+            carColor:data['color']
+            );
+    
+          
 
         carmodelslist.add(carmodel);
-        print(carmodelslist);
+    
       });
 
       return carmodelslist;
