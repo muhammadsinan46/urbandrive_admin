@@ -2,27 +2,31 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ud_admin/application/BookingScreen/booking_datat_bloc/booking_data_bloc.dart';
-import 'package:ud_admin/application/brandScreen/brand_list_bloc/brand_list_bloc.dart';
-import 'package:ud_admin/application/brandScreen/brand_logo/brand_logo_bloc.dart';
-import 'package:ud_admin/application/carModelScreen/car_model_list_bloc/car_model_list_bloc.dart';
-import 'package:ud_admin/application/carModelScreen/update_details_bloc/update_details_bloc.dart';
-import 'package:ud_admin/application/carModelScreen/model_image_bloc/carscreen_bloc.dart';
+import 'package:ud_admin/domain/car_details_repo.dart';
+import 'package:ud_admin/features/admin_login/pages/admin_login.dart';
+import 'package:ud_admin/features/booking/presentation/bloc/booking_data_bloc.dart';
+import 'package:ud_admin/features/brands/bloc/brand_list_bloc/brand_list_bloc.dart';
+import 'package:ud_admin/features/brands/bloc/brand_logo/brand_logo_bloc.dart';
+import 'package:ud_admin/features/car_details/bloc/car_details_list/car_details_list_bloc.dart';
+import 'package:ud_admin/features/car_details/bloc/car_model_bloc/car_details_bloc.dart';
+import 'package:ud_admin/features/model_screen/bloc/car_model_list_bloc/car_model_list_bloc.dart';
+import 'package:ud_admin/features/model_screen/bloc/update_details_bloc/update_details_bloc.dart';
+import 'package:ud_admin/features/model_screen/bloc/model_image_bloc/carscreen_bloc.dart';
 
 
-import 'package:ud_admin/application/categoryScreen/category_image_bloc/category_bloc.dart';
-import 'package:ud_admin/application/categoryScreen/category_list_bloc/categorylist_bloc.dart';
-import 'package:ud_admin/application/customersScreen/bloc/customers_list_bloc.dart';
+import 'package:ud_admin/features/category/bloc/category_image_bloc/category_bloc.dart';
+import 'package:ud_admin/features/category/bloc/category_list_bloc/categorylist_bloc.dart';
+import 'package:ud_admin/features/customers/bloc/customers_list_bloc.dart';
 
 
-import 'package:ud_admin/application/slidebar/bloc/slidebar_bloc.dart';
-import 'package:ud_admin/domain/booking_repo.dart';
+import 'package:ud_admin/features/main_screen/bloc/slidebar_bloc.dart';
+import 'package:ud_admin/features/booking/domain/booking_repo.dart';
 import 'package:ud_admin/domain/brand_repo.dart';
 import 'package:ud_admin/domain/car_model_repo.dart';
 import 'package:ud_admin/domain/cardata_model_repo.dart';
 import 'package:ud_admin/domain/category_repo.dart';
 import 'package:ud_admin/domain/customer_repo.dart';
-import 'package:ud_admin/pages/admin_login.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,7 +72,10 @@ class _MyAppState extends State<MyApp> {
 
         BlocProvider(create: (context) => CarModelListBloc(CarDataModelRepo()),),
         BlocProvider(create: (context) => CustomersListBloc(CustomersRepo()),),
-        BlocProvider(create: (context) => BookingDataBloc(BookingRepo()),)
+        BlocProvider(create: (context) => BookingDataBloc(BookingRepo()),),
+
+        BlocProvider(create: (context) => CarDetailsBloc(CarDetailsRepo()),),
+        BlocProvider(create: (context) => CarDetailsListBloc(CarDetailsRepo()),)
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false, home: AdminLoginScreen()),

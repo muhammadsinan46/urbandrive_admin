@@ -32,4 +32,44 @@ class CategoryRepo {
       return categoryList;
     }
   }
+
+
+  Future<List<CategoryModel>> searchCategory(String search)async{
+
+       List<CategoryModel> searchCategoryList =[];
+ try{
+
+
+    final searchdata = await FirebaseFirestore.instance.collection('category').orderBy('name').where('name', isEqualTo:search ).get();
+
+
+    print(searchdata);
+
+    searchdata.docs.forEach((element) { 
+
+      final data = element.data();
+
+      final searchCategory = CategoryModel(  
+          id: data['id'],
+            name: data['name'],
+            description: data['description'],
+            image: data['image']);
+
+
+            print("searched data is ${searchCategory.name}");
+            searchCategoryList.add(searchCategory);
+
+    });
+
+          return searchCategoryList;  
+
+
+ }on FirebaseException catch(e){
+
+  print(e.message);
+          return searchCategoryList;  
+ }
+
+
+  }
 }
