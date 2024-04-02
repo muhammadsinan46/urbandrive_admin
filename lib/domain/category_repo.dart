@@ -40,10 +40,10 @@ class CategoryRepo {
  try{
 
 
-    final searchdata = await FirebaseFirestore.instance.collection('category').orderBy('name').where('name', isEqualTo:search ).get();
+    final searchdata = await FirebaseFirestore.instance.collection('category').where('name', isEqualTo:search ).get();
 
 
-    print(searchdata);
+    print(searchdata.docs.length);
 
     searchdata.docs.forEach((element) { 
 

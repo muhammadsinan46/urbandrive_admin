@@ -17,7 +17,7 @@ class BookingModel {
 
   BookingModel(
       {this.userId,
-      required this.CarmodelId,
+       this.CarmodelId,
       this.BookingId,
       required this.BookingDays,
       required this.PickupDate,
@@ -28,7 +28,7 @@ class BookingModel {
       required this.DropoffAddress,
       required this.PaymentAmount,
       required this.PaymentStatus,
-      required this.agrchcked,
+       this.agrchcked,
       this.carmodel,
       this.userdata});
 }

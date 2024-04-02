@@ -1,11 +1,9 @@
 // ignore_for_file: must_be_immutable
 import 'dart:typed_data';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ud_admin/features/category/bloc/category_image_bloc/category_bloc.dart';
 import 'package:ud_admin/features/category/bloc/category_list_bloc/categorylist_bloc.dart';
 import 'package:ud_admin/domain/car_model_repo.dart';
@@ -36,7 +34,7 @@ class CategoryScreen extends StatelessWidget {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
-    print("category page is relaoding");
+
     context.read<CategorylistBloc>().add(CateListLoadedEvent());
     return Scaffold(
       body: SingleChildScrollView(
@@ -98,6 +96,8 @@ class CategoryScreen extends StatelessWidget {
                                       // BlocBuilder<CategoryBloc, CategoryState>(
                                       //   builder: (context, state) {
                                       //     return
+
+
                                       GestureDetector(
                                         onTap: () async {
                                           if (_formKey.currentState!

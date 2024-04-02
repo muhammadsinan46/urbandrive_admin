@@ -1,3 +1,5 @@
+
+
 part of 'categorylist_bloc.dart';
 
 sealed class CategorylistEvent extends Equatable {
@@ -13,7 +15,7 @@ class CateListLoadedEvent extends CategorylistEvent{
 }
 class CategorSearchEvent extends CategorylistEvent{
 
-  String search;
+ final  String search;
 
     CategorSearchEvent({required this.search});
       @override

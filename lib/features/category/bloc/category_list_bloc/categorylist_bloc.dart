@@ -18,7 +18,7 @@ class CategorylistBloc extends Bloc<CategorylistEvent, CategorylistState> {
 
   FutureOr<void> listLoading(
       CateListLoadingEvent event, Emitter<CategorylistState> emit) {
-    print("loading..");
+
   }
 
   FutureOr<void> listLoaded(
@@ -26,7 +26,7 @@ class CategorylistBloc extends Bloc<CategorylistEvent, CategorylistState> {
     emit(CategorylistInitial());
 
     try {
-      print("category is loading...");
+
       final categoryList = await repo.getCategoryData();
 
       emit(CategoryUpdatedState(categoryList: categoryList));

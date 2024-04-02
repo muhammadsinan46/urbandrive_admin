@@ -22,3 +22,16 @@ final class BookingDataLoadedState extends BookingDataState {
 
 
 }
+
+final class UpcomingBookingState extends BookingDataState {
+
+  final List<BookingModel> upcomingBookingList;
+
+  UpcomingBookingState({required this.upcomingBookingList});
+
+  List<Object> get props =>[upcomingBookingList];
+
+
+
+
+}

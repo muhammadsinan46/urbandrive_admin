@@ -82,8 +82,8 @@ class CustomerScreen extends StatelessWidget {
             DataColumn(label: Text("Name")),
             DataColumn2(label: Text("Email"), size: ColumnSize.L),
           //  DataColumn2(label: Text("Mobile Number")),
-            DataColumn2(label: Text("DL Number")),
-            DataColumn2(label: Text("Action"), size: ColumnSize.S),
+       
+          
           ],
           rows: List.generate(userslist.length, (index) {
             return DataRow2(
@@ -94,8 +94,8 @@ class CustomerScreen extends StatelessWidget {
                 DataCell(Text(userslist[index].name)),
                 DataCell(Text(userslist[index].email)),
              //   DataCell(Text(userslist[index].mobile)),
-                DataCell(Text("4562841")),
-                DataCell(Icon(Icons.more_horiz)),
+          
+              
               ],
             );
           }),

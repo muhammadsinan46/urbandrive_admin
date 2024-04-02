@@ -4,12 +4,15 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:loading_btn/loading_btn.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:ud_admin/features/model_screen/bloc/car_model_list_bloc/car_model_list_bloc.dart';
 import 'package:ud_admin/features/model_screen/bloc/update_details_bloc/update_details_bloc.dart';
 import 'package:ud_admin/features/model_screen/bloc/model_image_bloc/carscreen_bloc.dart';
@@ -17,6 +20,8 @@ import 'package:ud_admin/domain/car_data.dart';
 import 'package:ud_admin/domain/cardata_model.dart';
 import 'package:ud_admin/domain/cardata_model_repo.dart';
 import 'package:ud_admin/features/model_screen/widgets/data_row.dart';
+import 'package:ud_admin/features/model_screen/widgets/model_data_Text_field.dart';
+import 'package:ud_admin/features/model_screen/widgets/model_table_loading.dart';
 
 class ModelScreen extends StatefulWidget {
   ModelScreen({super.key});
@@ -46,7 +51,7 @@ class _ModelScreenState extends State<ModelScreen> {
 
   List<CarDataModel> carmodelList = [];
 
-  //String? selectedbrand;
+
   CarData cardata = CarData();
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -68,226 +73,167 @@ var _searchController =TextEditingController();
   Widget build(BuildContext context) {
     context.read<CarModelListBloc>().add(CarModelListLoadedEvent());
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          decoration: BoxDecoration(
-              // border: Border.all(),
-              ),
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Models",
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                    ),
-                      Container(
-                              width: MediaQuery.sizeOf(context).width - 1150,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: Colors.grey)),
-                              child: TextFormField(
-                                onChanged: (value) {
-                       
-                                },
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  hintText: "Search here....",
-                                  //label: Text("Search")
-                                ),
-                                controller: _searchController,
-                              ),
-                            ),
-                    GestureDetector(
-                      onTap: () {
-                        // carmodel.uploadBrandList();
-                        //  cater.getCategoryData();
-                        context
-                            .read<UpdateDetailsBloc>()
-                            .add(UpdatedDetailsEvent());
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Form(
-                                key: _formKey,
-                                child: AlertDialog(
-                                  backgroundColor: Colors.white,
-                                  actions: [
-                                    // BlocBuilder<CategoryBloc, CategoryState>(
-                                    //   builder: (context, state) {
-                                    //     return
-                                    submitModelForm(context),
-                                    //   },
-                                    // ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Container(
-                                        decoration:
-                                            BoxDecoration(border: Border.all()),
-                                        height: 50,
-                                        width: 100,
-                                        child: Center(child: Text("Cancel")),
-                                      ),
-                                    )
-                                  ],
-                                  title: const Text("Add Model Details"),
-                                  content: Stack(
-                                    children: [
-
-                                     
-                                      Card(
-                                        child: ModelDataTextField(
-                                            imageFileList: imageFileList,
-                                            cardata: cardata,
-                                            categorylist: categorylist,
-                                            brandlist: brandlist,
-                                            modelController: modelController,
-                                            priceController: priceController,
-                                            depositController: depositController,
-                                            freekmsController: freekmsController,
-                                            extraController: extraController),
-                                      ),
-                                      //if(showprogress==true) Center(child: CircularProgressIndicator(),)
-                                    ],
-                                  ),
-                                ),
-                              );
-                            });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.black,
-                        ),
-                        height: 40,
-                        width: 100,
-                        child: const Center(
-                            child: Text(
-                          "Add ",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        )),
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(
-                  height: 20,
-                ),
-                //row
-
-                Container(
-                  decoration: BoxDecoration(
-                      // border: Border.all(),
-                      ),
-                //  height: MediaQuery.sizeOf(context).height - 100,
-                  width: MediaQuery.sizeOf(context).width - 200,
-                  child: BlocBuilder<CarModelListBloc, CarModelListState>(
-                    builder: (context, state) {
-                      print(state.runtimeType);
-                      if (state is CarModelListInitial) {
-                        //    return ListView.builder(itemBuilder: (context, index) {
-                        return DataTable2(
-                        
-                            headingRowDecoration:
-                                BoxDecoration(border: Border.all()),
-                            //  decoration: BoxDecoration(border: Border.all()),
-                            horizontalMargin: 20,
-                            columnSpacing: 20,
-                            dataTextStyle: TextStyle(
-                              fontSize: 10,
-                            ),
-                            columns: const [
-                                   DataColumn2(
-                                    
-                                      label: Text(
-                                        "No.",
-                                      ),
-                                      size: ColumnSize.S),
-                              
-                                  DataColumn2(
-                                    label: Text("Category"),
-                                  ),
-                                  DataColumn2(label: Text("Brand")),
-                                  DataColumn2(label: Text("model")),
-                                  DataColumn2(label: Text("transmit")),
-                                  DataColumn2(label: Text("fuel")),
-                                  DataColumn2(label: Text("baggage")),
-                                  DataColumn2(label: Text("price")),
-                                  DataColumn2(label: Text("seats")),
-                                  DataColumn2(label: Text("deposit")),
-                                  DataColumn2(label: Text("freekms")),
-                                  DataColumn2(label: Text("extrakms")),
-                            
-                                  DataColumn2(label: Text("Edit")),
-                                  DataColumn2(label: Text("Delete")),
-                            ],
-                            rows: []);
-
-                        //     },);
-                      } else if (state is CarModelListUpdated) {
-                        carmodelList = state.cardataList;
-                        return carmodelList.length != 0?
-                        PaginatedDataTable(
-                          showCheckboxColumn: true,
-                        rowsPerPage: _pagesize,
-                        availableRowsPerPage: [10,20,30],
-                        onRowsPerPageChanged: (value) {
-                          setState(() {
-                              _pagesize = value!;
-                          });
-                        },
-
-                          columns: [       DataColumn2(
-                                    
-                                      label: Text(
-                                        "No.",
-                                      ),
-                                      size: ColumnSize.S),
-                              
-                                  DataColumn2(
-                                    label: Text("Category"),
-                                  ),
-                                  DataColumn2(label: Text("Brand")),
-                                  DataColumn2(label: Text("model")),
-                                  DataColumn2(label: Text("transmit")),
-                                  DataColumn2(label: Text("fuel")),
-                                  DataColumn2(label: Text("baggage")),
-                                  DataColumn2(label: Text("price")),
-                                  DataColumn2(label: Text("seats")),
-                                  DataColumn2(label: Text("deposit")),
-                                  DataColumn2(label: Text("freekms")),
-                                  DataColumn2(label: Text("extrakms")),
-                            
-                                  DataColumn2(label: Text("Edit")),
-                                  DataColumn2(label: Text("Delete")),
-                        ], source: DataSource(carmodelList: carmodelList)
-                   
-                        
-                        )
-                            : Container(
-                                child: Center(
-                                  child: Text("No models to display"),
-                                ),
-                              );
-                      } else {
-                        return Container();
-                      }
-                    },
-                  ),
-                )
-              ],
+      body: Container(
+        decoration: BoxDecoration(
+            // border: Border.all(),
             ),
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: ListView(
+              
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Models",
+                    style:
+                        TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  ),
+                   
+                  GestureDetector(
+                    onTap: () {
+                      // carmodel.uploadBrandList();
+                      //  cater.getCategoryData();
+                      context
+                          .read<UpdateDetailsBloc>()
+                          .add(UpdatedDetailsEvent());
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Form(
+                              key: _formKey,
+                              child: AlertDialog(
+                                backgroundColor: Colors.white,
+                                actions: [
+                                  // BlocBuilder<CategoryBloc, CategoryState>(
+                                  //   builder: (context, state) {
+                                  //     return
+                                  submitModelForm(context),
+                                  //   },
+                                  // ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      decoration:
+                                          BoxDecoration(border: Border.all()),
+                                      height: 50,
+                                      width: 100,
+                                      child: Center(child: Text("Cancel")),
+                                    ),
+                                  )
+                                ],
+                                title: const Text("Add Model Details"),
+                                content: Stack(
+                                  children: [
+      
+                                   
+                                    Card(
+                                      child: ModelDataTextField(
+                                          imageFileList: imageFileList,
+                                          cardata: cardata,
+                                          categorylist: categorylist,
+                                          brandlist: brandlist,
+                                          modelController: modelController,
+                                          priceController: priceController,
+                                          depositController: depositController,
+                                          freekmsController: freekmsController,
+                                          extraController: extraController),
+                                    ),
+                                    //if(showprogress==true) Center(child: CircularProgressIndicator(),)
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.black,
+                      ),
+                      height: 40,
+                      width: 100,
+                      child: const Center(
+                          child: Text(
+                        "Add ",
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      )),
+                    ),
+                  ),
+                ],
+              ),
+      
+              SizedBox(
+                height: 20,
+              ),
+              //row
+      
+              BlocBuilder<CarModelListBloc, CarModelListState>(
+                builder: (context, state) {
+                 
+                  if (state is CarModelListInitial) {
+                    //    return ListView.builder(itemBuilder: (context, index) {
+                    return ModelTableLoading();
+                  
+                    //     },);
+                  } else if (state is CarModelListUpdated) {
+                    carmodelList = state.cardataList;
+                    return carmodelList.length != 0?
+                    PaginatedDataTable(
+                                        sortAscending: false,
+                      showCheckboxColumn: true,
+                    rowsPerPage: _pagesize,
+                                        
+                    onRowsPerPageChanged: (value) {
+                      setState(() {
+                          _pagesize = value!;
+                      });
+                    },
+                          
+                      columns: [       DataColumn2(
+                                
+                                  label: Text(
+                                    "No.",
+                                  ),
+                                  size: ColumnSize.S),
+                          
+                              DataColumn2(label: Text("Brand")),
+                              DataColumn2(label: Text("model")),
+                              DataColumn2( label: Text("Category"), ),
+                              DataColumn2(label: Text("transmit")),
+                              DataColumn2(label: Text("fuel")),
+                              DataColumn2(label: Text("baggage")),
+                              DataColumn2(label: Text("price")),
+                              DataColumn2(label: Text("seats")),
+                              DataColumn2(label: Text("deposit")),
+                              DataColumn2(label: Text("freekms")),
+                              DataColumn2(label: Text("extrakms")),
+                        
+                        
+                              DataColumn2(label: Text("More")),
+                    ], source: DataSource(carmodelList: carmodelList)
+                                     
+                    
+                    )
+                        : Container(
+                            child: Center(
+                              child: Text("No models to display"),
+                            ),
+                          );
+                  }
+                  
+                   else {
+                    return Container();
+                  }
+                },
+              )
+            ],
           ),
         ),
       ),
@@ -313,8 +259,8 @@ var _searchController =TextEditingController();
     setState(() {
           _progress =event.bytesTransferred.toDouble();
         showprogress =true;
-        print(showprogress);
-          print(_progress.toString());
+        
+      
       
     });
 
@@ -330,12 +276,26 @@ var _searchController =TextEditingController();
     return  downloadUrl;
   }
 
-  GestureDetector submitModelForm(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        if (_formKey.currentState!.validate()) {
+  Widget submitModelForm(BuildContext context) {
+    return LoadingBtn(
+      color: Colors.black,
+      
+
+      roundLoadingShape: false,
+       loader: Container(
+      padding: const EdgeInsets.all(10),
+      child: const Center(
+          child: CircularProgressIndicator(
+            color: Colors.white,
+          ),
+      ),
+    ),
+         onTap: (startLoading, stopLoading, btnState) async {
+
+             if (btnState == ButtonState.idle) {
+            startLoading();
+         if (_formKey.currentState!.validate()) {
           _formKey.currentState!.save();
-          
 
           List<String> imgurlList =await  uploadImages(imageFileList);
 
@@ -379,14 +339,13 @@ var _searchController =TextEditingController();
                 msg: "File added to the databse");
           });
         }
+            await Future.delayed(const Duration(seconds: 5));
+            stopLoading();
+        }
+       
       },
-      child: Container(
-        decoration: BoxDecoration(border: Border.all()),
-        height: 50,
-        width: 100,
-        child:  Center(child: Text("Submit"))
-      ),
-    );
+      
+      height: 50 , width: 140, child:Text("Submit", style: TextStyle(color: Colors.white),) );
   }
 
   submitModelData(context) async {}
@@ -410,609 +369,5 @@ var _searchController =TextEditingController();
         .toList();
 
     return cityvalueList;
-  }
-}
-
-class ModelDataTextField extends StatelessWidget {
-  const ModelDataTextField({
-    super.key,
-    required this.imageFileList,
-    required this.cardata,
-    required this.categorylist,
-    required this.brandlist,
-    required this.modelController,
-    required this.priceController,
-    required this.depositController,
-    required this.freekmsController,
-    required this.extraController,
-  });
-
-  final List<Uint8List>? imageFileList;
-  final CarData cardata;
-  final List<String> categorylist;
-  final List<String> brandlist;
-  final TextEditingController modelController;
-  final TextEditingController priceController;
-  final TextEditingController depositController;
-  final TextEditingController freekmsController;
-  final TextEditingController extraController;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width - 420,
-      decoration: const BoxDecoration(
-          //   color: Color.fromARGB(255, 224, 224, 224),
-          ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          BlocBuilder<CarscreenBloc, CarscreenState>(
-            builder: (context, state) {
-              if (state is UploadImageState) {
-                if (state.imageFile.isNotEmpty) {
-                  imageFileList!.addAll(state.imageFile);
-                }
-
-                //   imageFileList!.addAll(state.imageFile);
-
-                return Column(
-                  children: [
-                    Container(
-                      height: 450,
-                      width: MediaQuery.sizeOf(context).width - 1020,
-                      child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 1.2,
-                          crossAxisCount: 2,
-                          //  // crossAxisSpacing: 18.0,
-                          //   mainAxisSpacing: 18.0
-                        ),
-                        itemCount: 4,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            height: 10,
-                            width: 20,
-                            margin: EdgeInsets.all(18),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: const Color.fromARGB(
-                                        255, 147, 147, 147))),
-                            child: Image.memory(
-                              state.imageFile[index],
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        context.read<CarscreenBloc>().add(UploadImageEvent());
-                      },
-                      child: Container(
-                        color: Colors.black,
-                        height: 45,
-                        width: 160,
-                        child: const Center(
-                            child: Text(
-                          "Add Image",
-                          style: TextStyle(color: Colors.white),
-                        )),
-                      ),
-                    ),
-                  ],
-                );
-              } else if (state is CarscreenInitial) {
-                return Column(
-                  children: [
-                    Container(
-                      // decoration: BoxDecoration(
-                      //     border: Border.all()),
-                      height: 450,
-                      width: MediaQuery.sizeOf(context).width - 1020,
-                      child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 1.2,
-                          crossAxisCount: 2,
-                          //  // crossAxisSpacing: 18.0,
-                          //   mainAxisSpacing: 18.0
-                        ),
-                        itemCount: 4,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            height: 10,
-                            width: 20,
-                            margin: EdgeInsets.all(18),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: const Color.fromARGB(
-                                        255, 147, 147, 147))),
-                            child: Icon(
-                              Icons.add_a_photo_outlined,
-                              color: const Color.fromARGB(255, 203, 203, 203),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        context.read<CarscreenBloc>().add(UploadImageEvent());
-                      },
-                      child: Container(
-                        color: Colors.black,
-                        height: 45,
-                        width: 160,
-                        child: const Center(
-                            child: Text(
-                          "Add Image",
-                          style: TextStyle(color: Colors.white),
-                        )),
-                      ),
-                    ),
-                  ],
-                );
-              } else {
-                return Text("Error");
-              }
-            },
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 100),
-            padding: EdgeInsets.only(left: 5),
-            // height: 450,
-            width: MediaQuery.sizeOf(context).width - 958,
-            // decoration:
-            //     BoxDecoration(border: Border.all()),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                BlocBuilder<UpdateDetailsBloc, UpdateDetailsState>(
-                  builder: (context, state) {
-                    if (state is UpdatedDetailsState) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        //     mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                              // height: 50,
-                              width: 280,
-                              child: DropdownButtonFormField(
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: (value) {
-                                  if (value == null) {
-                                    return "Please select an Item";
-                                  }
-                                  return null;
-                                },
-                                value: cardata.categoryValue,
-                                decoration: InputDecoration(
-                                  labelText: "Category",
-                                  border: const OutlineInputBorder(),
-                                  // hintText: ,
-                                ),
-                                items: state.categoryList.map((String value) {
-                                  return DropdownMenuItem(
-                                      value: value, child: Text(value));
-                                }).toList(),
-                                onChanged: (String? value) {
-                                  cardata.categoryValue = value;
-
-                                  //BlocProvider.of<AddcarmenuBloc>(context).add(AddCarChangedEvent(dropchangedvalue:value! ));
-                                },
-                                onSaved: (newValue) {
-                                  //     (newValue);
-                                  cardata.categoryValue = newValue;
-                                  //    ( cardata.brand);
-                                },
-                              )),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            //     height: 50,
-                            width: 280,
-
-                            child: DropdownButtonFormField(
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              validator: (value) {
-                                if (value == null) {
-                                  return "Please select an Item";
-                                }
-                                return null;
-                              },
-                              value: cardata.brandValue,
-                              decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
-                                hintText: "Brands",
-                              ),
-                              items: state.brandnameList.map((String value) {
-                                return DropdownMenuItem(
-                                    value: value, child: Text(value));
-                              }).toList(),
-                              onChanged: (String? value) {
-                                cardata.brandValue = value;
-
-                                //BlocProvider.of<AddcarmenuBloc>(context).add(AddCarChangedEvent(dropchangedvalue:value! ));
-                              },
-                              onSaved: (newValue) {
-                                //     (newValue);
-                                cardata.brandValue = newValue;
-                                //    ( cardata.brand);
-                              },
-                            ),
-                          )
-                        ],
-                      );
-                    } else {
-                      return DropdownLoadingField(
-                          categorylist: categorylist,
-                          cardata: cardata,
-                          brandlist: brandlist);
-                    }
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      // height: 50,
-                      width: 280,
-
-                      child: TextFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Please enter model name";
-                          }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                            border: OutlineInputBorder(), hintText: "Model"),
-                        controller: modelController,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                        //     height: 50,
-                        width: 280,
-                        child: DropdownButtonFormField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value == null) {
-                              return "Please select an transmission";
-                            }
-                            return null;
-                          },
-                          value: cardata.transmitValue,
-                          decoration: InputDecoration(
-                            labelText: "Transmission",
-                            border: const OutlineInputBorder(),
-                            // hintText: ,
-                          ),
-                          items: cardata.transmitList.map((String value) {
-                            return DropdownMenuItem(
-                                value: value, child: Text(value));
-                          }).toList(),
-                          onChanged: (String? value) {
-                            cardata.transmitValue = value;
-                            //BlocProvider.of<AddcarmenuBloc>(context).add(AddCarChangedEvent(dropchangedvalue:value! ));
-                          },
-                          onSaved: (newValue) {
-                            //     (newValue);
-                            cardata.transmitValue = newValue;
-                            //    ( cardata.brand);
-                          },
-                        ))
-                  ],
-                ),
-                //////////////////////////////////////////
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                        // height: 50,
-                        width: 280,
-                        child: DropdownButtonFormField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value == null) {
-                              return "Please select fuel type";
-                            }
-                            return null;
-                          },
-                          value: cardata.fuelValue,
-                          decoration: InputDecoration(
-                            labelText: "Fuel",
-                            border: const OutlineInputBorder(),
-                            // hintText: ,
-                          ),
-                          items: cardata.fuelList.map((String value) {
-                            return DropdownMenuItem(
-                                value: value, child: Text(value));
-                          }).toList(),
-                          onChanged: (String? value) {
-                            cardata.fuelValue = value;
-
-                            //BlocProvider.of<AddcarmenuBloc>(context).add(AddCarChangedEvent(dropchangedvalue:value! ));
-                          },
-                          onSaved: (newValue) {
-                            //     (newValue);
-                            cardata.fuelValue = newValue;
-                            //    ( cardata.brand);
-                          },
-                        )),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                        // height: 50,
-                        width: 280,
-                        child: DropdownButtonFormField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value == null) {
-                              return "Please select an baggage size";
-                            }
-                            return null;
-                          },
-                          value: cardata.baggageValue,
-                          decoration: InputDecoration(
-                            labelText: "Baggage",
-                            border: const OutlineInputBorder(),
-                            // hintText: ,
-                          ),
-                          items: cardata.baggageList.map((String value) {
-                            return DropdownMenuItem(
-                                value: value, child: Text(value));
-                          }).toList(),
-                          onChanged: (String? value) {
-                            cardata.baggageValue = value;
-
-                            //BlocProvider.of<AddcarmenuBloc>(context).add(AddCarChangedEvent(dropchangedvalue:value! ));
-                          },
-                          onSaved: (newValue) {
-                            //     (newValue);
-                            cardata.baggageValue = newValue;
-                            //    ( cardata.brand);
-                          },
-                        )),
-                  ],
-                ),
-
-                ////////////////////////////////////////////////////           //
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                    
-                      width: 280,
-
-                      child: TextFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Please enter price amount(₹)";
-                          }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: "Price(₹)"),
-                        controller: priceController,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                        // height: 50,
-                        width: 280,
-                        child: DropdownButtonFormField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value == null) {
-                              return "Please select seat count";
-                            }
-                            return null;
-                          },
-                          //  value: cardata.model,
-                          decoration: InputDecoration(
-                            labelText: "Seats",
-                            border: const OutlineInputBorder(),
-                            // hintText: ,
-                          ),
-                          items: cardata.seatsList.map((String value) {
-                            return DropdownMenuItem(
-                                value: value, child: Text(value));
-                          }).toList(),
-                          onChanged: (String? value) {
-                            cardata.seatsValue = value;
-
-                            //BlocProvider.of<AddcarmenuBloc>(context).add(AddCarChangedEvent(dropchangedvalue:value! ));
-                          },
-                          onSaved: (newValue) {
-                            //     (newValue);
-                            cardata.seatsValue = newValue;
-                            //    ( cardata.brand);
-                          },
-                        )),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      // height: 50,
-                      width: 280,
-
-                      child: TextFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Please enter deposit amount(₹)";
-                          }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: "Deposit(₹)"),
-                        controller: depositController,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      // height: 50,
-                      width: 280,
-
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 140,
-                            child: TextFormField(
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "* Required field";
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "Free Kms"),
-                              controller: freekmsController,
-                            ),
-                          ),
-                          Container(
-                            width: 130,
-                            child: TextFormField(
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "* Required field";
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "Extra Kms"),
-                              controller: extraController,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class DropdownLoadingField extends StatelessWidget {
-  const DropdownLoadingField({
-    super.key,
-    required this.categorylist,
-    required this.cardata,
-    required this.brandlist,
-  });
-
-  final List<String> categorylist;
-  final CarData cardata;
-  final List<String> brandlist;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //     mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-            // height: 50,
-            width: 280,
-            child: DropdownButtonFormField(
-              validator: (value) {
-                if (value == null) {
-                  return "Please select an Item";
-                }
-                return null;
-              },
-              //   value: cardata.model,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                hintText: "Category",
-              ),
-              items: categorylist.map((String value) {
-                return DropdownMenuItem(value: value, child: Text(value));
-              }).toList(),
-              onChanged: (String? value) {
-                cardata.categoryValue = value;
-
-                //BlocProvider.of<AddcarmenuBloc>(context).add(AddCarChangedEvent(dropchangedvalue:value! ));
-              },
-              onSaved: (newValue) {
-                //     (newValue);
-                cardata.categoryValue = newValue;
-                //    ( cardata.brand);
-              },
-            )),
-        SizedBox(
-          width: 10,
-        ),
-        Container(
-          //     height: 50,
-          width: 280,
-
-          child: DropdownButtonFormField(
-            validator: (value) {
-              if (value == null) {
-                return "Please select an Item";
-              }
-              return null;
-            },
-            // value: cardata.brand,
-            decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              hintText: "Brands",
-            ),
-            items: brandlist.map((String value) {
-              return DropdownMenuItem(value: value, child: Text(value));
-            }).toList(),
-            onChanged: (String? value) {
-              cardata.brandValue = value;
-
-              //BlocProvider.of<AddcarmenuBloc>(context).add(AddCarChangedEvent(dropchangedvalue:value! ));
-            },
-            onSaved: (newValue) {
-              //     (newValue);
-              cardata.brandValue = newValue;
-              //    ( cardata.brand);
-            },
-          ),
-        )
-      ],
-    );
   }
 }

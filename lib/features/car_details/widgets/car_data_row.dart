@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ud_admin/domain/car_detail_model.dart';
-import 'package:ud_admin/domain/cardata_model.dart';
 
 class CarDetailsSource extends DataTableSource {
   final List<CarDetails> carDetailList;
@@ -32,14 +31,14 @@ CarDetailsSource({required this.carDetailList});
   }
 
   @override
-  // TODO: implement isRowCountApproximate
+
   bool get isRowCountApproximate => false;
 
   @override
-  // TODO: implement rowCount
+ 
   int get rowCount => carDetailList.length+2;
 
   @override
-  // TODO: implement selectedRowCount
+
   int get selectedRowCount =>0;
 }

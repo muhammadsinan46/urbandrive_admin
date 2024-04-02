@@ -1,7 +1,7 @@
 class CustomersModel {
   String id;
   String name;
-  String? profile;
+  // String? profile;
   //String mobile;
   String email;
 

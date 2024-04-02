@@ -6,10 +6,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loading_btn/loading_btn.dart';
 import 'package:ud_admin/features/brands/bloc/brand_list_bloc/brand_list_bloc.dart';
 import 'package:ud_admin/features/brands/bloc/brand_logo/brand_logo_bloc.dart';
 import 'package:ud_admin/domain/brand_model.dart';
@@ -32,7 +32,7 @@ class AddBrandScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   context.read<BrandListBloc>().add(BrandListLoadedEvent());
+    context.read<BrandListBloc>().add(BrandListLoadedEvent());
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -48,8 +48,7 @@ class AddBrandScreen extends StatelessWidget {
                 children: [
                   const Text(
                     "Brand",
-                    style:
-                        TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -63,53 +62,47 @@ class AddBrandScreen extends StatelessWidget {
                               actions: [
                                 GestureDetector(
                                   onTap: () async {
-                                  
-                                    if(_formKey.currentState!.validate()){
-
+                                    if (_formKey.currentState!.validate()) {
                                       _formKey.currentState!.save();
                                       firebase_storage.Reference ref =
-                                        await firebase_storage
-                                            .FirebaseStorage.instance
-                                            .ref(
-                                                '/brandimage${DateTime.now().millisecond}');
-                                  
-                                    firebase_storage.UploadTask uploadTask =
-                                        ref.putData(brandlogo!);
-                                    await uploadTask;
-                                    String logoUrl = await ref.getDownloadURL();
-                                    print("${logoUrl}");
-                                    brandfirestoreId = await
-                                        firestore.collection('brands').doc().id;
-                                  
-                                    Map<String, dynamic> datas = {
-                                      "id": brandfirestoreId,
-                                      "name": brandnameController.text,
-                                      "description": descriptionController.text,
-                                      "logo": logoUrl
-                                    };
-                                  
-                          
-                                    await firestore
-                                        .collection('brands')
-                                        .doc(brandfirestoreId)
-                                        .set(datas)
-                                        .then((value) {
-                                  
-                                  
-                                        
-                                      context
-                                          .read<BrandListBloc>()
-                                          .add(BrandListLoadedEvent());
-                                        
-                                      Navigator.pop(context);
-                                    });
+                                          await firebase_storage
+                                              .FirebaseStorage.instance
+                                              .ref(
+                                                  '/brandimage${DateTime.now().millisecond}');
 
+                                      firebase_storage.UploadTask uploadTask =
+                                          ref.putData(brandlogo!);
+                                      await uploadTask;
+                                      String logoUrl =
+                                          await ref.getDownloadURL();
+                                      print("${logoUrl}");
+                                      brandfirestoreId = await firestore
+                                          .collection('brands')
+                                          .doc()
+                                          .id;
 
+                                      Map<String, dynamic> datas = {
+                                        "id": brandfirestoreId,
+                                        "name": brandnameController.text,
+                                        "description":
+                                            descriptionController.text,
+                                        "logo": logoUrl
+                                      };
 
-                                    }else{
-                                        print("brand logo is ${brandlogo}");
+                                      await firestore
+                                          .collection('brands')
+                                          .doc(brandfirestoreId)
+                                          .set(datas)
+                                          .then((value) {
+                                        context
+                                            .read<BrandListBloc>()
+                                            .add(BrandListLoadedEvent());
+
+                                        Navigator.pop(context);
+                                      });
+                                    } else {
+                                      print("brand logo is ${brandlogo}");
                                     }
-                                    
                                   },
                                   child: Container(
                                     decoration:
@@ -210,14 +203,12 @@ class AddBrandScreen extends StatelessWidget {
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Container(
-                                        //  height: 50,
+                                          //  height: 50,
                                           width: 500,
                                           child: TextFormField(
                                             validator: (value) {
-                                              if(value!.isEmpty){
-                                  
+                                              if (value!.isEmpty) {
                                                 return "Plase enter brand name";
-                                  
                                               }
                                               return null;
                                             },
@@ -237,14 +228,12 @@ class AddBrandScreen extends StatelessWidget {
                                         ),
                                         SizedBox(height: 10),
                                         Container(
-                                        height: 150,
+                                          height: 150,
                                           width: 500,
                                           child: TextFormField(
                                             validator: (value) {
-                                              if(value!.isEmpty){
-                                  
+                                              if (value!.isEmpty) {
                                                 return "Plase enter description";
-                                  
                                               }
                                               return null;
                                             },
@@ -290,14 +279,12 @@ class AddBrandScreen extends StatelessWidget {
                 width: MediaQuery.of(context).size.width - 500,
                 child: BlocBuilder<BrandListBloc, BrandListState>(
                   builder: (context, state) {
-                    print("this is the brand list state ${state.runtimeType}");
                     if (state is BrandListInitial) {
                       return GridView.builder(
-                        gridDelegate:
-                            SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 5,
-                                crossAxisSpacing: 8.0,
-                                mainAxisSpacing: 30.0),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 5,
+                            crossAxisSpacing: 8.0,
+                            mainAxisSpacing: 30.0),
                         itemCount: brandList.length,
                         itemBuilder: (context, index) {
                           return Card(
@@ -310,7 +297,7 @@ class AddBrandScreen extends StatelessWidget {
                       );
                     } else if (state is BrandLoadedList) {
                       brandList = state.brandList;
-                  
+
                       return brandList.length != 0
                           ? GridView.builder(
                               gridDelegate:
@@ -350,14 +337,12 @@ class AddBrandScreen extends StatelessWidget {
                                         )
                                       ],
                                       content: Container(
-                                        height: MediaQuery.of(context)
-                                                .size
-                                                .height -
-                                            400,
-                                        width: MediaQuery.of(context)
-                                                .size
-                                                .width -
-                                            1200,
+                                        height:
+                                            MediaQuery.of(context).size.height -
+                                                400,
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                1200,
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
@@ -371,9 +356,7 @@ class AddBrandScreen extends StatelessWidget {
                                               brandList[index].name,
                                               style: TextStyle(fontSize: 22),
                                             ),
-                                            Text(
-                                                brandList[index].description),
-                                            Text("Number of Cars: 12"),
+                                            Text(brandList[index].description),
                                           ],
                                         ),
                                       ),
@@ -386,15 +369,14 @@ class AddBrandScreen extends StatelessWidget {
                                           MainAxisAlignment.start,
                                       children: [
                                         Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              2,
-                                          height: 120,
-                                          child:CachedNetworkImage(imageUrl:  brandList[index].logo)
-                                      
-                                       
-                                        ),
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                2,
+                                            height: 120,
+                                            child: CachedNetworkImage(
+                                                imageUrl:
+                                                    brandList[index].logo)),
                                         Text(
                                           brandList[index].name,
                                           style: TextStyle(
@@ -417,71 +399,77 @@ class AddBrandScreen extends StatelessWidget {
                                                       backgroundColor:
                                                           Colors.white,
                                                       actions: [
-                                                        GestureDetector(
-                                                          onTap: () async {
-                                                            firebase_storage
-                                                                .Reference
-                                                                ref =
-                                                                await firebase_storage
-                                                                    .FirebaseStorage
-                                                                    .instance
-                                                                    .ref(
-                                                                        '/brand${DateTime.now().millisecond}');
-      
-                                                            firebase_storage
-                                                                .UploadTask
-                                                                uploadTask =
-                                                                ref.putData(
-                                                                    brandlogo!);
-                                                            await uploadTask;
-                                                            String logoUrl =
-                                                                await ref
-                                                                    .getDownloadURL();
-                                                            print(
-                                                                "${logoUrl}");
-      
-                                                            Map<String,
-                                                                    dynamic>
-                                                                datas = {
-                                                              "name":
-                                                                  brandnameController
-                                                                      .text,
-                                                              "description":
-                                                                  descriptionController
-                                                                      .text,
-                                                              "logo": logoUrl
-                                                            };
-      
-                                                            await firestore
-                                                                .collection(
-                                                                    'brands')
-                                                                .doc(brandList[
-                                                                        index]
-                                                                    .id)
-                                                                .update(datas)
-                                                                .then(
-                                                                    (value) {
-                                                              context
-                                                                  .read<
-                                                                      BrandListBloc>()
-                                                                  .add(
-                                                                      BrandListLoadedEvent());
-                                                              Navigator.pop(
-                                                                  context);
-                                                            });
-                                                          },
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                                    border: Border
-                                                                        .all()),
+                                                        LoadingBtn(
+                                                            onTap: (startLoading,
+                                                                stopLoading,
+                                                                btnState) async {
+                                                              if (btnState ==
+                                                                  ButtonState
+                                                                      .idle) {
+                                                                startLoading();
+                                                                firebase_storage
+                                                                    .Reference
+                                                                    ref =
+                                                                    await firebase_storage
+                                                                        .FirebaseStorage
+                                                                        .instance
+                                                                        .ref(
+                                                                            '/brand${DateTime.now().millisecond}');
+
+                                                                firebase_storage
+                                                                    .UploadTask
+                                                                    uploadTask =
+                                                                    ref.putData(
+                                                                        brandlogo!);
+                                                                await uploadTask;
+                                                                String logoUrl =
+                                                                    await ref
+                                                                        .getDownloadURL();
+                                                                print(
+                                                                    "${logoUrl}");
+
+                                                                Map<String,
+                                                                        dynamic>
+                                                                    datas = {
+                                                                  "name":
+                                                                      brandnameController
+                                                                          .text,
+                                                                  "description":
+                                                                      descriptionController
+                                                                          .text,
+                                                                  "logo":
+                                                                      logoUrl
+                                                                };
+
+                                                                await firestore
+                                                                    .collection(
+                                                                        'brands')
+                                                                    .doc(brandList[
+                                                                            index]
+                                                                        .id)
+                                                                    .update(
+                                                                        datas)
+                                                                    .then(
+                                                                        (value) {
+                                                                  context
+                                                                      .read<
+                                                                          BrandListBloc>()
+                                                                      .add(
+                                                                          BrandListLoadedEvent());
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                });
+                                                                await Future.delayed(
+                                                                    const Duration(
+                                                                        seconds:
+                                                                            3));
+                                                                stopLoading();
+                                                              }
+                                                            },
                                                             height: 50,
                                                             width: 100,
-                                                            child: Center(
-                                                                child: Text(
-                                                                    "Submit")),
-                                                          ),
-                                                        ),
+                                                            child:
+                                                                Text("Submit")),
                                                         GestureDetector(
                                                           onTap: () {
                                                             Navigator.pop(
@@ -504,8 +492,7 @@ class AddBrandScreen extends StatelessWidget {
                                                           "Add Brand Details"),
                                                       content: Container(
                                                         margin:
-                                                            EdgeInsets.all(
-                                                                15),
+                                                            EdgeInsets.all(15),
                                                         height: 400,
                                                         width: MediaQuery.of(
                                                                     context)
@@ -520,24 +507,27 @@ class AddBrandScreen extends StatelessWidget {
                                                             BlocBuilder<
                                                                 BrandLogoBloc,
                                                                 BrandLogoState>(
-                                                              builder:
-                                                                  (context,
-                                                                      state) {
+                                                              builder: (context,
+                                                                  state) {
                                                                 if (state
                                                                     is BrandLogoLoading) {
                                                                   return GestureDetector(
-                                                                    onTap:
-                                                                        () {
+                                                                    onTap: () {
                                                                       context
-                                                                          .read<BrandLogoBloc>()
-                                                                          .add(LogoLoadedEvent());
+                                                                          .read<
+                                                                              BrandLogoBloc>()
+                                                                          .add(
+                                                                              LogoLoadedEvent());
                                                                     },
                                                                     child:
                                                                         Container(
                                                                       decoration: BoxDecoration(
-                                                                          border:
-                                                                              Border.all(color: const Color.fromARGB(255, 152, 152, 152)),
-                                                                          image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(brandList[index].logo))),
+                                                                          border: Border.all(
+                                                                              color: const Color.fromARGB(255, 152, 152,
+                                                                                  152)),
+                                                                          image: DecorationImage(
+                                                                              fit: BoxFit.cover,
+                                                                              image: NetworkImage(brandList[index].logo))),
                                                                       height:
                                                                           150,
                                                                       width:
@@ -546,22 +536,25 @@ class AddBrandScreen extends StatelessWidget {
                                                                   );
                                                                 } else if (state
                                                                     is BrandLogoUpdated) {
-                                                                  brandlogo =
-                                                                      state
-                                                                          .brandlogo;
+                                                                  brandlogo = state
+                                                                      .brandlogo;
                                                                   return GestureDetector(
-                                                                    onTap:
-                                                                        () {
+                                                                    onTap: () {
                                                                       context
-                                                                          .read<BrandLogoBloc>()
-                                                                          .add(LogoLoadedEvent());
+                                                                          .read<
+                                                                              BrandLogoBloc>()
+                                                                          .add(
+                                                                              LogoLoadedEvent());
                                                                     },
                                                                     child:
                                                                         Container(
                                                                       decoration: BoxDecoration(
-                                                                          border:
-                                                                              Border.all(color: const Color.fromARGB(255, 152, 152, 152)),
-                                                                          image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(brandList[index].logo))),
+                                                                          border: Border.all(
+                                                                              color: const Color.fromARGB(255, 152, 152,
+                                                                                  152)),
+                                                                          image: DecorationImage(
+                                                                              fit: BoxFit.cover,
+                                                                              image: NetworkImage(brandList[index].logo))),
                                                                       height:
                                                                           150,
                                                                       width:
@@ -588,7 +581,8 @@ class AddBrandScreen extends StatelessWidget {
                                                                     decoration:
                                                                         InputDecoration(
                                                                       hintText:
-                                                                          brandList[index].name,
+                                                                          brandList[index]
+                                                                              .name,
                                                                       // label: Text(
                                                                       //     "Brand Name",
                                                                       //     style:
@@ -599,8 +593,7 @@ class AddBrandScreen extends StatelessWidget {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height:
-                                                                        10),
+                                                                    height: 10),
                                                                 Container(
                                                                   height: 150,
                                                                   width: 500,
@@ -608,15 +601,18 @@ class AddBrandScreen extends StatelessWidget {
                                                                       TextField(
                                                                     controller:
                                                                         descriptionController,
-                                                                    maxLines:
-                                                                        5,
+                                                                    maxLines: 5,
                                                                     decoration: InputDecoration(
                                                                         border:
                                                                             OutlineInputBorder(),
                                                                         hintText: brandList[index]
                                                                             .description,
-                                                                        hintStyle:
-                                                                            TextStyle(color: Color.fromARGB(255, 152, 152, 152))),
+                                                                        hintStyle: TextStyle(
+                                                                            color: Color.fromARGB(
+                                                                                255,
+                                                                                152,
+                                                                                152,
+                                                                                152))),
                                                                   ),
                                                                 ),
                                                               ],
@@ -631,16 +627,14 @@ class AddBrandScreen extends StatelessWidget {
                                               child: Container(
                                                 decoration: BoxDecoration(
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          10),
+                                                      BorderRadius.circular(10),
                                                   color: Colors.black,
                                                 ),
                                                 height: 30,
                                                 width: 80,
                                                 child: Center(
                                                     child: FaIcon(
-                                                  FontAwesomeIcons
-                                                      .penToSquare,
+                                                  FontAwesomeIcons.penToSquare,
                                                   color: Colors.white,
                                                   size: 12,
                                                 )),
@@ -649,7 +643,10 @@ class AddBrandScreen extends StatelessWidget {
                                             SizedBox(
                                               width: 20,
                                             ),
-                                            DeleteBrandButton(brandList: brandList, index: index,),
+                                            DeleteBrandButton(
+                                              brandList: brandList,
+                                              index: index,
+                                            ),
                                           ],
                                         )
                                       ],
@@ -683,4 +680,3 @@ class AddBrandScreen extends StatelessWidget {
     );
   }
 }
-

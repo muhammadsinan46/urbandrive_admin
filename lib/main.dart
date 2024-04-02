@@ -9,6 +9,10 @@ import 'package:ud_admin/features/brands/bloc/brand_list_bloc/brand_list_bloc.da
 import 'package:ud_admin/features/brands/bloc/brand_logo/brand_logo_bloc.dart';
 import 'package:ud_admin/features/car_details/bloc/car_details_list/car_details_list_bloc.dart';
 import 'package:ud_admin/features/car_details/bloc/car_model_bloc/car_details_bloc.dart';
+import 'package:ud_admin/features/dashboard/bloc/dash_board_bloc/dash_card_bloc.dart';
+import 'package:ud_admin/features/dashboard/domain/dashboard_repo.dart';
+import 'package:ud_admin/features/inbox_screen/bloc/chatuser_bloc.dart';
+import 'package:ud_admin/features/inbox_screen/domain/inbox_repo.dart';
 import 'package:ud_admin/features/model_screen/bloc/car_model_list_bloc/car_model_list_bloc.dart';
 import 'package:ud_admin/features/model_screen/bloc/update_details_bloc/update_details_bloc.dart';
 import 'package:ud_admin/features/model_screen/bloc/model_image_bloc/carscreen_bloc.dart';
@@ -38,7 +42,11 @@ void main() async {
             appId: "1:626820479065:web:ac34698727c8f2fe411948",
             messagingSenderId: "626820479065",
             storageBucket: "urban-drive-2a233.appspot.com",
-            projectId: "urban-drive-2a233"));
+            projectId: "urban-drive-2a233",
+            authDomain: "urban-drive-2a233.firebaseapp.com",
+            databaseURL: 'https://urban-drive-2a233-default-rtdb.firebaseio.com/'
+            
+            ));
   }
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -69,13 +77,13 @@ class _MyAppState extends State<MyApp> {
 
         BlocProvider(create: (context) => BrandLogoBloc(),),
         BlocProvider(create: (context) => BrandListBloc(BrandRepo()),),
-
         BlocProvider(create: (context) => CarModelListBloc(CarDataModelRepo()),),
         BlocProvider(create: (context) => CustomersListBloc(CustomersRepo()),),
         BlocProvider(create: (context) => BookingDataBloc(BookingRepo()),),
-
         BlocProvider(create: (context) => CarDetailsBloc(CarDetailsRepo()),),
-        BlocProvider(create: (context) => CarDetailsListBloc(CarDetailsRepo()),)
+        BlocProvider(create: (context) => CarDetailsListBloc(CarDetailsRepo()),),
+        BlocProvider(create: (context) => DashCardBloc(DashBoardRepo()),),
+        BlocProvider(create: (context) => ChatuserBloc(InboxRoomRepo()),),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false, home: AdminLoginScreen()),

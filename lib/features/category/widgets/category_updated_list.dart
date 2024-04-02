@@ -89,7 +89,7 @@ class CategoryUpdatedList extends StatelessWidget {
                                   String newImageUrl =
                                       await ref
                                           .getDownloadURL();
-                                  print(newImageUrl);
+                             
             
                                   Map<String, dynamic>
                                       datas = {

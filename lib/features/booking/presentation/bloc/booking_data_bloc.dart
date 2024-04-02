@@ -14,6 +14,7 @@ class BookingDataBloc extends Bloc<BookingDataEvent, BookingDataState> {
     on<BookingDataLoadingEvent>(loadingData);
 
     on<BookingDataLoadedEvent>(dataLoaded);
+    on<UpcomingBookingEvent>(upcomingData);
   }
 
   FutureOr<void> loadingData(
@@ -33,5 +34,15 @@ class BookingDataBloc extends Bloc<BookingDataEvent, BookingDataState> {
     } catch (e) {
       print("error occured loading data ${e.toString()}");
     }
+  }
+
+  FutureOr<void> upcomingData(UpcomingBookingEvent event, Emitter<BookingDataState> emit)async {
+
+    emit(BookingDataInitialState());
+    final upcomingList = await bookingrepo.getUpcomingBooking();
+
+   
+    emit(UpcomingBookingState(upcomingBookingList: upcomingList));
+
   }
 }
